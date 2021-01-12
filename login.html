@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Bootstrap Material Admin</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="robots" content="all,follow">
+	<link rel="stylesheet" href="https://www.jq22.com/jquery/bootstrap-4.2.1.css">
+	<link rel="stylesheet" href="/housing-rental-management/src/assets/css/style.default.css" id="theme-stylesheet">
+	<link rel="stylesheet" href="/housing-rental-management/src/assets/layui/css/layui.css">
+</head>
+
+<body>
+	<div class="page login-page">
+		<div class="container d-flex align-items-center">
+			<div class="form-holder has-shadow">
+				<div class="row">
+					<!-- Logo & Information Panel-->
+					<div class="col-lg-6">
+						<div class="info d-flex align-items-center">
+							<div class="content">
+								<div class="logo">
+									<h1>欢迎登录</h1>
+								</div>
+								<p>住房出租管理系统</p>
+							</div>
+						</div>
+					</div>
+					<!-- Form Panel    -->
+					<div class="col-lg-6 bg-white">
+						<div class="form d-flex align-items-center">
+							<div class="content">
+								<form class="layui-form">
+									<div class="layui-form-item">
+										<label class="layui-form-label">用户名</label>
+										<div class="layui-input-block">
+											<input type="text" name="account" required lay-verify="required" placeholder="请输入用户名"
+												autocomplete="off" class="layui-input">
+										</div>
+									</div>
+									<div class="layui-form-item">
+										<label class="layui-form-label">密码</label>
+										<div class="layui-input-block">
+											<input type="password" name="password" required lay-verify="required" placeholder="请输入密码"
+												autocomplete="off" class="layui-input">
+										</div>
+									</div>
+									<div class="layui-form-item">
+										<div class="layui-input-block">
+											<button class="layui-btn" lay-submit lay-filter="login">立即提交</button>
+											<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+										</div>
+									</div>
+								</form>
+								<small>没有账号?</small><a href="register.html" class="signup">&nbsp;注册</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<script src="/housing-rental-management/src/assets/layui/layui.all.js"></script>
+	<script src="/housing-rental-management/node_modules/axios/dist/axios.min.js"></script>
+
+	<script>
+		layui.use(['form', 'jquery', 'layer'], function () {
+			var form = layui.form;
+			var $ = layui.jquery
+			var layer = layui.layer
+			//监听提交
+			form.on('submit(login)', function (data) {
+				//前端拦截器
+				axios.interceptors.request.use(config => {
+					let uToken = localStorage.getItem("uToken");
+					if (uToken) {
+						//1.2 注意：给请求头里面添加u-token（后台判断就是取的这个请求头）请求头，并把随机数的token值也设置进去
+						config.headers['u-token'] = uToken;
+					}
+					//1.3 必须要返回这个，才能执行后面代码
+					return config;
+				})
+				axios({
+					url:'http://localhost:8080/userLogin',
+					params:{
+						account:data.field.account,
+						password:data.field.password
+					}
+				}).then(res => {
+					
+				}).catch(err => {
+
+				})
+				// $.ajax({
+				// 	url: 'http://localhost:8080/user',
+				// 	type: 'GET',
+				// 	dataType: 'JSON',
+				// 	contentType: "application/json;charset=utf-8",
+				// 	data: data.field,
+				// 	success: function (obj) {
+				// 		console.log('---');
+				// 	},
+				// 	error: function (err) {
+
+				// 	}
+				// })
+				return false;
+			});
+		});
+	</script>
+</body>
+
+</html>
