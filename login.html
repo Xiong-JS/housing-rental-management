@@ -92,23 +92,12 @@
 						password:data.field.password
 					}
 				}).then(res => {
+					console.log(res);
 					
 				}).catch(err => {
 
 				})
-				// $.ajax({
-				// 	url: 'http://localhost:8080/user',
-				// 	type: 'GET',
-				// 	dataType: 'JSON',
-				// 	contentType: "application/json;charset=utf-8",
-				// 	data: data.field,
-				// 	success: function (obj) {
-				// 		console.log('---');
-				// 	},
-				// 	error: function (err) {
-
-				// 	}
-				// })
+				
 				return false;
 			});
 		});
