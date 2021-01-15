@@ -86,18 +86,28 @@
 					return config;
 				})
 				axios({
-					url:'http://localhost:8080/userLogin',
-					params:{
-						account:data.field.account,
-						password:data.field.password
+					url: 'http://localhost:8080/managerLogin',
+					params: {
+						account: data.field.account,
+						password: data.field.password
 					}
 				}).then(res => {
-					console.log(res);
-					
+					console.log(res.data.result.data);
+					// return;
+					if (res.data.result.code == "000002") {
+						layer.msg(res.data.result.msg)
+						setTimeout(() => {
+							window.location.href = 'http://localhost:8081?uToken=' + res.data.uToken + '&id='+res.data.result.data[0].id;
+						}, 1000);
+					}else{
+						layer.msg(res.data.result.msg)
+					}
+
+
 				}).catch(err => {
 
 				})
-				
+
 				return false;
 			});
 		});
