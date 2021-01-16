@@ -1,7 +1,11 @@
 <template>
   <div id="app">
-    <el-container style="width:100%;height:100%;position:fixed">
-      <el-header>{{$store.state.manager.id}}</el-header>
+    <div v-if="getToken">
+      <el-container style="width: 100%; height: 100%; position: fixed">
+      <el-header>
+        {{ $store.state.manager.id }}
+        
+      </el-header>
       <el-container>
         <el-aside width="200px">
           <el-menu
@@ -38,28 +42,44 @@
                   >
                 </el-menu-item>
                 <el-menu-item index="2-2">
-                  <router-link to="/rental" active-class="active">出租信息</router-link>
-                  </el-menu-item>
+                  <router-link to="/rental" active-class="active"
+                    >出租信息</router-link
+                  >
+                </el-menu-item>
                 <el-menu-item index="2-3">
-                  <router-link to="/sellList" active-class="active">订单信息</router-link>
-                  </el-menu-item>
+                  <router-link to="/sellList" active-class="active"
+                    >订单信息</router-link
+                  >
+                </el-menu-item>
               </el-menu-item-group>
             </el-submenu>
           </el-menu>
         </el-aside>
         <el-container>
-          <el-main><keep-alive><router-view></router-view></keep-alive></el-main>
+          <el-main
+            ><keep-alive><router-view></router-view></keep-alive
+          ></el-main>
           <el-footer>@2021-01 2021-06</el-footer>
         </el-container>
       </el-container>
     </el-container>
+    </div>
+    <div v-else>
+      {{loginFailed()}}
+    </div>
+    
   </div>
 </template>
 
 <script>
 // import HouseInfo from "./components/house/hosueInfo";
-
+console.log(localStorage.getItem("uToken")+'11111111');
 export default {
+  computed: {
+    getToken:function() {
+      return localStorage.getItem("uToken") != 'undefined';
+    },
+  },
   methods: {
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
@@ -67,8 +87,32 @@ export default {
     handleClose(key, keyPath) {
       console.log(key, keyPath);
     },
-    
+    loginFailed(){
+      this.$message.error('未登录，请登录！');
+      setTimeout(() => {
+         window.location.href="http://127.0.0.1:8082/housing-rental-management/login.html"
+      }, 1000);
+     
+    }
   },
+  beforeCreate(){
+    var urlHead = "";
+    var url = location.search; //获取url中"?"符后的字串
+    var theRequest = new Object();
+    if (url.indexOf("?") != -1) {
+      var str = url.substr(1);
+      var strs = str.split("&");
+      for (var i = 0; i < strs.length; i++) {
+        theRequest[strs[i].split("=")[0]] = decodeURIComponent(
+          strs[i].split("=")[1]
+        );
+      }
+    }
+    let uToken = theRequest.uToken;
+    let id = theRequest.id;
+    localStorage.setItem("uToken", uToken);
+    localStorage.setItem("id",id);
+  }
 };
 </script>
 
@@ -92,7 +136,7 @@ export default {
   background-color: #e9eef3;
   color: #333;
   text-align: center;
-  line-height: 160px;
+  /* line-height: 160px; */
 }
 
 body > .el-container {
@@ -115,5 +159,4 @@ a {
   text-decoration: none;
   color: white;
 }
-
 </style>
