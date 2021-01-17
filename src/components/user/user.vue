@@ -14,9 +14,24 @@
         size="small"
         >搜索</el-button
       >
+      <el-button
+        @click="deleteBtnUsers"
+        type="danger"
+        size="small"
+        class="el-icon-delete"
+        style="margin-left: 100px"
+        >删除</el-button
+      >
     </div>
     <div class="block" style="margin-top: 20px">
-      <el-table :data="users" height="450" style="width: 100%">
+      <el-table
+        :data="users"
+        max-height="450"
+        style="width: 100%"
+        stripe
+        @selection-change="handleSelectionChange"
+        ref="multipleTable"
+      >
         <el-table-column type="selection" width="55"> </el-table-column>
         <el-table-column type="expand">
           <template slot-scope="props">
@@ -55,12 +70,20 @@
         <el-table-column label="用户密码" prop="userPassword">
         </el-table-column>
 
-        <el-table-column fixed="right" label="操作" width="200">
-          <template>
-            <el-button type="danger" size="small" class="el-icon-delete"
+        <el-table-column fixed="right" label="操作" width="170">
+          <template slot-scope="scope">
+            <el-button
+              type="danger"
+              size="small"
+              class="el-icon-delete"
+              @click="handleDelete(scope.$index, scope.row)"
               >删除</el-button
             >
-            <el-button type="primary" size="small" class="el-icon-edit"
+            <el-button
+              type="primary"
+              size="small"
+              class="el-icon-edit"
+              @click="handleEdit(scope.$index, scope.row)"
               >编辑</el-button
             >
           </template>
@@ -80,6 +103,47 @@
       >
       </el-pagination>
     </div>
+    <!-- 修改对话框 -->
+    <el-dialog title="用户修改" :visible.sync="editFormVisible" append-to-body>
+      <el-form :model="formData">
+        <el-form-item label="用户姓名" :label-width="formLabelWidth">
+          <el-input v-model="formData.userName" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="用户账号" :label-width="formLabelWidth">
+          <el-input
+            v-model="formData.userAccount"
+            auto-complete="off"
+            disabled
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="用户密码" :label-width="formLabelWidth">
+          <el-input
+            v-model="formData.userPassword"
+            auto-complete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="用户头像" :label-width="formLabelWidth">
+          <el-input v-model="formData.userImg" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="用户注册时间" :label-width="formLabelWidth">
+          <el-input
+            v-model="formData.userRegisterTime"
+            auto-complete="off"
+            disabled
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="零钱" :label-width="formLabelWidth">
+          <el-input
+            v-model="formData.userWallet"
+            auto-complete="off"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="editFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="editUserConfirm">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -94,6 +158,19 @@ export default {
       currentPage: 1,
       total: 0,
       pageSize: 8,
+      multipleSelection: [],
+      editFormVisible: false,
+      userIds: [],
+      formData: {
+        id: "",
+        userName: "",
+        userAccount: "",
+        userPassword: "",
+        userImg: "",
+        userRegisterTime: "",
+        userWallet: "",
+      },
+      formLabelWidth: "120px",
     };
   },
   methods: {
@@ -110,7 +187,7 @@ export default {
         },
       })
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           if (res.data.code == "200") {
             this.users = res.data.data;
             this.currentPage = res.data.currentPage;
@@ -121,7 +198,101 @@ export default {
     },
     searchBtn() {
       // handleCurrentChange(1);
-      this.handleCurrentChange(1)
+      this.handleCurrentChange(1);
+    },
+    handleEdit(index, row) {
+      this.formData.id = row.id;
+      this.formData.userName = row.userName;
+      this.formData.userAccount = row.userAccount;
+      this.formData.userPassword = row.userPassword;
+      this.formData.userImg = row.userImg;
+      this.formData.userRegisterTime = row.userRegisterTime;
+      this.formData.userWallet = row.userWallet;
+      this.editFormVisible = true;
+    },
+    handleDelete(index, row) {
+      this.$confirm("此操作将永久删除该用户, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          request({
+            url: "/user/userDelete",
+            method: "post",
+            data: {
+              id: row.id,
+            },
+          }).then((res) => {
+            this.$message({
+              type: "success",
+              message: "删除成功!",
+            });
+            this.handleCurrentChange(1);
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
+      // console.log(index, row);
+    },
+    handleSelectionChange(val) {
+      console.log(val);
+      this.multipleSelection = val;
+    },
+    editUserConfirm() {
+      request({
+        url: "/user/userEdit",
+        method: "post",
+        data: {
+          id: this.formData.id,
+          userName: this.formData.userName,
+          userPassword: this.formData.userPassword,
+          userImg: this.formData.userImg,
+          userWallet: this.userWallet,
+        },
+      })
+        .then((res) => {
+          console.log("userEdit", res);
+          this.handleCurrentChange(1);
+        })
+        .catch((err) => {});
+      this.editFormVisible = false;
+    },
+    deleteBtnUsers() {
+      this.$confirm("此操作将永久删除该用户, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          this.userIds.join(",");
+          console.log(this.userIds);
+          request({
+            url: "/user/usersDelete",
+            method: "post",
+            data: JSON.stringify(this.userIds),
+          }).then((res) => {
+            this.$message({
+              type: "success",
+              message: "删除成功!",
+            });
+            this.handleCurrentChange(1);
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
+
+      for (let i = 0; i < this.multipleSelection.length; i++) {
+        this.userIds[i] = this.multipleSelection[i].id;
+      }
     },
   },
   beforeCreate() {
@@ -143,11 +314,11 @@ export default {
       params: {
         page: 1,
         num: this.pageSize,
-        userName:this.inputName
+        userName: this.inputName,
       },
     })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         if (res.data.code == "200") {
           this.users = res.data.data;
           this.currentPage = res.data.currentPage;
@@ -174,5 +345,9 @@ export default {
   margin-right: 0;
   margin-bottom: 0;
   width: 50%;
+}
+.el-table--border th.gutter:last-of-type {
+  display: table-cell !important;
+  width: 50px !important;
 }
 </style>

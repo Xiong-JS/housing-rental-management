@@ -73,7 +73,7 @@
 
 <script>
 // import HouseInfo from "./components/house/hosueInfo";
-console.log(localStorage.getItem("uToken")+'11111111');
+// console.log(localStorage.getItem("uToken")+'11111111');
 export default {
   computed: {
     getToken:function() {
