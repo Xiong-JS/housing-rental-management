@@ -19,8 +19,16 @@
         type="danger"
         size="small"
         class="el-icon-delete"
-        style="margin-left: 100px"
+        style="margin-left: 200px"
         >删除</el-button
+      >
+      <el-button
+        @click="addBtnUser"
+        type="success"
+        size="small"
+        class="el-icon-plus"
+        style="margin-left: 20px"
+        >新增</el-button
       >
     </div>
     <div class="block" style="margin-top: 20px">
@@ -144,12 +152,56 @@
         <el-button type="primary" @click="editUserConfirm">确 定</el-button>
       </div>
     </el-dialog>
+
+    <!-- 新增用户 -->
+    <el-dialog title="用户增加" :visible.sync="addFormVisible" append-to-body>
+      <el-form :model="addUser">
+        <el-form-item label="用户姓名" :label-width="formLabelWidth">
+          <el-input v-model="addUser.userName" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="用户账号" :label-width="formLabelWidth">
+          <el-input
+            v-model="addUser.userAccount"
+            auto-complete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="用户密码" :label-width="formLabelWidth">
+          <el-input
+            v-model="addUser.userPassword"
+            auto-complete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="用户头像" :label-width="formLabelWidth">
+          <el-upload
+            class="avatar-uploader"
+            :action="uploadUrl"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload"
+            :headers="headers"
+            :data="imgData"
+          >
+            <img v-if="addUser.userImg" :src="addUser.userImg" class="avatar" style="width:100px;height:100px" />
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+          <!-- <el-input v-model="addUser.userImg" auto-complete="off"></el-input> -->
+        </el-form-item>
+        <el-form-item label="零钱" :label-width="formLabelWidth">
+          <el-input v-model="addUser.userWallet" auto-complete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="addFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addUserConfirm">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import * as types from "../../store/mutations-type-string";
 import request from "../../network/request";
+
 export default {
   data() {
     return {
@@ -160,7 +212,11 @@ export default {
       pageSize: 8,
       multipleSelection: [],
       editFormVisible: false,
+      addFormVisible: false,
       userIds: [],
+      uploadUrl: "http://localhost:8080/imgUpload",
+      headers: { "u-token": localStorage.getItem("uToken") },
+      imgData:'',
       formData: {
         id: "",
         userName: "",
@@ -168,6 +224,14 @@ export default {
         userPassword: "",
         userImg: "",
         userRegisterTime: "",
+        userWallet: "",
+      },
+      addUser: {
+        id: "",
+        userName: "",
+        userAccount: "",
+        userPassword: "",
+        userImg: "",
         userWallet: "",
       },
       formLabelWidth: "120px",
@@ -240,7 +304,7 @@ export default {
       // console.log(index, row);
     },
     handleSelectionChange(val) {
-      console.log(val);
+      // console.log(val);
       this.multipleSelection = val;
     },
     editUserConfirm() {
@@ -294,6 +358,35 @@ export default {
         this.userIds[i] = this.multipleSelection[i].id;
       }
     },
+    handleAvatarSuccess(res, file) {
+      this.addUser.userImg = URL.createObjectURL(file.raw);
+      this.$message.error ('上传成功')
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === "image/jpeg";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error("上传头像图片只能是 JPG 格式!");
+      }
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 2MB!");
+      }
+      return isJPG && isLt2M;
+    },
+    addBtnUser() {
+      this.addUser.id = ''
+      this.addUser.userName = ''
+      this.addUser.userAccount = ''
+      this.addUser.userPassword = ''
+      this.addUser.userImg = '';
+      this.addUser.userWallet = ''
+      this.imgData = {
+        path:'bishe/user'
+      }
+      this.addFormVisible = true;
+    },
+    addUserConfirm() {},
   },
   beforeCreate() {
     request({
