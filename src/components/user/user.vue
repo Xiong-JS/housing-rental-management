@@ -58,10 +58,9 @@
               </el-form-item>
               <el-form-item label="用户头像">
                 <img
-                  src="../../assets/img/p_big3.jpg"
+                  :src="props.row.userImg"
                   style="width: 100px; height: 100px"
                 />
-                <span>{{ props.row.userImg }}</span>
               </el-form-item>
               <el-form-item label="用户注册时间">
                 <span>{{ props.row.userRegisterTime }}</span>
@@ -181,7 +180,12 @@
             :headers="headers"
             :data="imgData"
           >
-            <img v-if="addUser.userImg" :src="addUser.userImg" class="avatar" style="width:100px;height:100px" />
+            <img
+              v-if="addUser.userImg"
+              :src="addUser.userImg"
+              class="avatar"
+              style="width: 100px; height: 100px"
+            />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
           <!-- <el-input v-model="addUser.userImg" auto-complete="off"></el-input> -->
@@ -216,7 +220,7 @@ export default {
       userIds: [],
       uploadUrl: "http://localhost:8080/imgUpload",
       headers: { "u-token": localStorage.getItem("uToken") },
-      imgData:'',
+      imgData: "",
       formData: {
         id: "",
         userName: "",
@@ -360,7 +364,7 @@ export default {
     },
     handleAvatarSuccess(res, file) {
       this.addUser.userImg = URL.createObjectURL(file.raw);
-      this.$message.error ('上传成功')
+      this.$message.success("上传成功");
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg";
@@ -375,18 +379,39 @@ export default {
       return isJPG && isLt2M;
     },
     addBtnUser() {
-      this.addUser.id = ''
-      this.addUser.userName = ''
-      this.addUser.userAccount = ''
-      this.addUser.userPassword = ''
-      this.addUser.userImg = '';
-      this.addUser.userWallet = ''
+      this.addUser.id = "";
+      this.addUser.userName = "";
+      this.addUser.userAccount = "";
+      this.addUser.userPassword = "";
+      this.addUser.userImg = "";
+      this.addUser.userWallet = "";
       this.imgData = {
-        path:'bishe/user'
-      }
+        path: "bishe/user",
+      };
       this.addFormVisible = true;
     },
-    addUserConfirm() {},
+    addUserConfirm() {
+      request({
+        url: "/user",
+        method: "post",
+        data: {
+          userName: this.addUser.userName,
+          userAccount: this.addUser.userAccount,
+          userPassword: this.addUser.userPassword,
+          userImg: this.addUser.userImg,
+          userWallet: this.addUser.userWallet,
+        },
+      }).then((res) => {
+        this.addFormVisible = false;
+        if (res.data.code == "000") {
+          this.$message.error(res.data.msg);
+        } else {
+          this.$message.success(res.data.msg);
+          this.handleCurrentChange(1);
+        }
+        console.log(res);
+      });
+    },
   },
   beforeCreate() {
     request({
