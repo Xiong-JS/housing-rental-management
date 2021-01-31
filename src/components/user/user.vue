@@ -130,7 +130,24 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="用户头像" :label-width="formLabelWidth">
-          <el-input v-model="formData.userImg" auto-complete="off"></el-input>
+          <el-upload
+            class="avatar-uploader"
+            :action="uploadUrl"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload"
+            :headers="headers"
+            :data="imgData"
+          >
+            <img
+              v-if="formData.userImg"
+              :src="formData.userImg"
+              class="avatar"
+              style="width: 100px; height: 100px"
+            />
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+          <!-- <el-input v-model="addUser.userImg" auto-complete="off"></el-input> -->
         </el-form-item>
         <el-form-item label="用户注册时间" :label-width="formLabelWidth">
           <el-input
@@ -277,6 +294,9 @@ export default {
       this.formData.userRegisterTime = row.userRegisterTime;
       this.formData.userWallet = row.userWallet;
       this.editFormVisible = true;
+      this.imgData = {
+        path: "bishe/user",
+      };
     },
     handleDelete(index, row) {
       this.$confirm("此操作将永久删除该用户, 是否继续?", "提示", {
@@ -320,7 +340,7 @@ export default {
           userName: this.formData.userName,
           userPassword: this.formData.userPassword,
           userImg: this.formData.userImg,
-          userWallet: this.userWallet,
+          userWallet: this.formData.userWallet,
         },
       })
         .then((res) => {
@@ -363,18 +383,19 @@ export default {
       }
     },
     handleAvatarSuccess(res, file) {
-      this.addUser.userImg = URL.createObjectURL(file.raw);
+      this.addUser.userImg = res.data
+      this.formData.userImg = res.data
       this.$message.success("上传成功");
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 2;
+      const isLt2M = file.size / 1024 / 1024 < 1;
 
       if (!isJPG) {
         this.$message.error("上传头像图片只能是 JPG 格式!");
       }
       if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
+        this.$message.error("上传头像图片大小不能超过 1MB!");
       }
       return isJPG && isLt2M;
     },

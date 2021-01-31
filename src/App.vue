@@ -53,6 +53,19 @@
                 </el-menu-item>
               </el-menu-item-group>
             </el-submenu>
+            <el-submenu index="3">
+              <template slot="title">
+                <i class="el-icon-edit-outline"></i>
+                <span>系统基础管理</span>
+              </template>
+              <el-menu-item-group>
+                <el-menu-item index="1-1">
+                  <router-link to="/carousel" active-class="active">
+                    轮播图管理</router-link
+                  >
+                </el-menu-item>
+              </el-menu-item-group>
+            </el-submenu>
           </el-menu>
         </el-aside>
         <el-container>
@@ -72,8 +85,6 @@
 </template>
 
 <script>
-// import HouseInfo from "./components/house/hosueInfo";
-// console.log(localStorage.getItem("uToken")+'11111111');
 export default {
   computed: {
     getToken:function() {

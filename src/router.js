@@ -7,6 +7,7 @@ const HouseInfo = () => import('./components/house/hosueInfo.vue')
 const User = () => import('./components/user//user.vue')
 const Rental = () => import('./components/house/rental.vue')
 const SellList = () => import('./components/house/sellList.vue')
+const Carousel = ()=>import('./views/carousel/Carousel.vue')
 
 
 export default new Router({
@@ -31,6 +32,10 @@ export default new Router({
     {
       path: '/sellList',
       component: SellList
+    },
+    {
+      path:'/carousel',
+      component:Carousel
     }
   ]
 })
