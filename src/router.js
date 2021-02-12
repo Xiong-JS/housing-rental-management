@@ -3,10 +3,10 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-const HouseInfo = () => import('./components/house/hosueInfo.vue')
-const User = () => import('./components/user//user.vue')
-const Rental = () => import('./components/house/rental.vue')
-const SellList = () => import('./components/house/sellList.vue')
+const HouseInfo = () => import('./views/house/hosueInfo.vue')
+const User = () => import('./views/user//user.vue')
+const Rental = () => import('./views/house/rental.vue')
+const SellList = () => import('./views/house/sellList.vue')
 const Carousel = ()=>import('./views/carousel/Carousel.vue')
 
 

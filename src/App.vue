@@ -19,7 +19,8 @@
           >
             <el-submenu index="1">
               <template slot="title">
-                <i class="el-icon-location"></i>
+                <!-- <i class="el-icon-location"></i> -->
+                <i class="iconfont icon-zhufang"></i>
                 <span>人员信息</span>
               </template>
               <el-menu-item-group>
@@ -128,6 +129,7 @@ export default {
 </script>
 
 <style>
+@import url("./assets/img/icon/iconfont.css");
 .el-header,
 .el-footer {
   background-color: #b3c0d1;

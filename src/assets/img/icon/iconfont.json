@@ -1,0 +1,16 @@
+{
+  "id": "2370303",
+  "name": "house-rental",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "15383976",
+      "name": "住房",
+      "font_class": "zhufang",
+      "unicode": "e616",
+      "unicode_decimal": 58902
+    }
+  ]
+}
