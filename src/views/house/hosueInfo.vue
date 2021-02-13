@@ -2,15 +2,23 @@
   <div>
     <div class="block">
       <el-select v-model="Netherlands" placeholder="请选择区域">
-        <el-option label="九龙坡" value="0"> </el-option>
-        <el-option label="北碚" value="1"> </el-option>
-        <el-option label="南岸" value="2"> </el-option>
-        <el-option label="巴南" value="3"> </el-option>
-        <el-option label="渝北" value="4"> </el-option>
+        <el-option label="无" value="0"> </el-option>
+        <el-option label="九龙坡" value="1"> </el-option>
+        <el-option label="北碚" value="2"> </el-option>
+        <el-option label="南岸" value="3"> </el-option>
+        <el-option label="巴南" value="4"> </el-option>
+        <el-option label="渝北" value="5"> </el-option>
       </el-select>
       <el-select v-model="Quote" placeholder="请选择报价">
-        <el-option label="3000以下" value="0"> </el-option>
-        <el-option label="3000以上" value="1"> </el-option>
+        <el-option label="无" value="0"> </el-option>
+        <el-option label="3000以下" value="1"> </el-option>
+        <el-option label="3000以上" value="2"> </el-option>
+      </el-select>
+      <el-select v-model="RentalType" placeholder="请选择类型">
+        <el-option label="无" value="0"> </el-option>
+        <el-option label="合租" value="1"> </el-option>
+        <el-option label="整租" value="2"> </el-option>
+        <el-option label="公寓" value="3"> </el-option>
       </el-select>
       <el-input
         v-model="inputRentalType"
@@ -30,7 +38,7 @@
         type="danger"
         size="small"
         class="el-icon-delete"
-        style="margin-left: 200px"
+        style="margin-left: 150px"
         >删除</el-button
       >
       <el-button
@@ -234,8 +242,9 @@ import request from "../../network/request";
 export default {
   data() {
     return {
-      Netherlands:"",
-      Quote:"",
+      Netherlands: "",
+      Quote: "",
+      RentalType:"",
       users: [],
       inputName: "",
       currentPage: 1,

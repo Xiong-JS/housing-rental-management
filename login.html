@@ -97,7 +97,7 @@
 					if (res.data.result.code == "000002") {
 						layer.msg(res.data.result.msg)
 						setTimeout(() => {
-							window.location.href = 'http://localhost:8081?uToken=' + res.data.uToken + '&id='+res.data.result.data[0].id;
+							window.location.href = 'http://localhost:8083?uToken=' + res.data.uToken + '&id='+res.data.result.data[0].id;
 						}, 1000);
 					}else{
 						layer.msg(res.data.result.msg)

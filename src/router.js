@@ -7,7 +7,7 @@ const HouseInfo = () => import('./views/house/hosueInfo.vue')
 const User = () => import('./views/user//user.vue')
 const Rental = () => import('./views/house/rental.vue')
 const SellList = () => import('./views/house/sellList.vue')
-const Carousel = ()=>import('./views/carousel/Carousel.vue')
+const Carousel = ()=>import('./components/carousel/Carousel.vue')
 
 
 export default new Router({

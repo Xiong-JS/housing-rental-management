@@ -102,7 +102,7 @@ export default {
     loginFailed(){
       this.$message.error('未登录，请登录！');
       setTimeout(() => {
-         window.location.href="http://127.0.0.1:8082/housing-rental-management/login.html"
+         window.location.href="http://127.0.0.1:8083/housing-rental-management/login.html"
       }, 1000);
      
     }
