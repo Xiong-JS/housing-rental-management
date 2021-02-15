@@ -9,22 +9,16 @@
         <el-option label="巴南" value="4"> </el-option>
         <el-option label="渝北" value="5"> </el-option>
       </el-select>
-      <el-select v-model="Quote" placeholder="请选择报价">
+      <el-select
+        v-model="Quote"
+        placeholder="请选择报价"
+        style="margin-left: 10px"
+      >
         <el-option label="无" value="0"> </el-option>
         <el-option label="3000以下" value="1"> </el-option>
         <el-option label="3000以上" value="2"> </el-option>
       </el-select>
-      <el-select v-model="RentalType" placeholder="请选择类型">
-        <el-option label="无" value="0"> </el-option>
-        <el-option label="合租" value="1"> </el-option>
-        <el-option label="整租" value="2"> </el-option>
-        <el-option label="公寓" value="3"> </el-option>
-      </el-select>
-      <el-input
-        v-model="inputRentalType"
-        placeholder="用户姓名"
-        style="width: 200px"
-      ></el-input>
+
       <el-button
         @click="searchBtn"
         type="primary"
@@ -33,6 +27,13 @@
         size="small"
         >搜索</el-button
       >
+      <el-switch
+        v-model="detailSearch"
+        active-text="查询更多"
+        inactive-text="隐藏"
+        style="margin-left: 20px"
+      >
+      </el-switch>
       <el-button
         @click="deleteBtnHouseInfos"
         type="danger"
@@ -50,9 +51,22 @@
         >新增</el-button
       >
     </div>
-    <!-- <div class="block" style="margin-top: 20px">
+    <div v-show="detailSearch" style="float: left; margin-left: 140px">
+      <el-select v-model="RentalType" placeholder="请选择类型">
+        <el-option label="无" value="0"> </el-option>
+        <el-option label="合租" value="1"> </el-option>
+        <el-option label="整租" value="2"> </el-option>
+        <el-option label="公寓" value="3"> </el-option>
+      </el-select>
+      <el-input
+        v-model="inputName"
+        placeholder="发布人名称"
+        style="width: 200px; margin-left: 10px"
+      ></el-input>
+    </div>
+    <div class="block" style="margin-top: 20px">
       <el-table
-        :data="users"
+        :data="houseInfos"
         max-height="450"
         style="width: 100%"
         stripe
@@ -63,17 +77,20 @@
         <el-table-column type="expand">
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
-              <el-form-item label="用户 ID">
-                <span>{{ props.row.id }}</span>
+              <el-form-item label="门牌号">
+                <span>{{ props.row.houseNumber }}</span>
               </el-form-item>
-              <el-form-item label="用户姓名">
-                <span>{{ props.row.userName }}</span>
+              <el-form-item label="住房类型">
+                <span>{{ props.row.rentalType }}</span>
               </el-form-item>
-              <el-form-item label="用户账号">
-                <span>{{ props.row.userAccount }}</span>
+              <el-form-item label="报价">
+                <span>{{ props.row.quote }}</span>
               </el-form-item>
-              <el-form-item label="用户密码">
-                <span>{{ props.row.userPassword }}</span>
+              <el-form-item label="整套面积">
+                <span>{{ props.row.area }}</span>
+              </el-form-item>
+              <el-form-item label="室-厅-卫">
+                <span>{{ props.row.room }}-{{props.row.hall}}-{{props.row.toilet}}</span>
               </el-form-item>
               <el-form-item label="用户头像">
                 <img
@@ -90,12 +107,16 @@
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column label="用户 ID" sortable prop="id"> </el-table-column>
-        <el-table-column label="用户账号" prop="userAccount"> </el-table-column>
-        <el-table-column label="用户姓名" prop="userName"> </el-table-column>
-        <el-table-column label="用户密码" prop="userPassword">
+        <el-table-column label="房屋 ID" sortable prop="id"> </el-table-column>
+        <el-table-column label="登录用户" prop="userName"> </el-table-column>
+        <el-table-column label="发布人" prop="releaseName"> </el-table-column>
+        <el-table-column label="发布人电话" prop="releasePhone">
         </el-table-column>
-
+        <el-table-column label="城市" prop="country"> </el-table-column>
+        <el-table-column label="县区" prop="netherlands"> </el-table-column>
+        <el-table-column label="详细区域" prop="detailNetherlands">
+        </el-table-column>
+        <el-table-column label="小区" prop="community"> </el-table-column>
         <el-table-column fixed="right" label="操作" width="170">
           <template slot-scope="scope">
             <el-button
@@ -115,7 +136,7 @@
           </template>
         </el-table-column>
       </el-table>
-    </div> -->
+    </div>
 
     <!-- <div class="block">
       <el-pagination
@@ -243,17 +264,18 @@ export default {
   data() {
     return {
       Netherlands: "",
-      Quote: "",
-      RentalType:"",
-      users: [],
+      Quote: 0,
+      RentalType: 0,
       inputName: "",
+      detailSearch: false,
+      houseInfos: [],
       currentPage: 1,
       total: 0,
       pageSize: 8,
       multipleSelection: [],
       editFormVisible: false,
       addFormVisible: false,
-      userIds: [],
+      houseInfosIds: [],
       uploadUrl: "http://localhost:8080/imgUpload",
       headers: { "u-token": localStorage.getItem("uToken") },
       imgData: "",
@@ -468,17 +490,21 @@ export default {
   //data初始化后el还没绑定时
   created() {
     request({
-      url: "/user/userList",
+      url: "/house/houseInfos",
       params: {
         page: 1,
-        num: this.pageSize,
+        netherlands: this.netherlands,
+        quote: this.quote,
+        rentalType: this.rentalType,
+        name: this.inputName,
+        limit: this.pageSize,
         userName: this.inputName,
       },
     })
       .then((res) => {
         // console.log(res.data);
         if (res.data.code == "200") {
-          this.users = res.data.data;
+          this.houseInfos = res.data.data;
           this.currentPage = res.data.currentPage;
           this.total = res.data.total;
         }
