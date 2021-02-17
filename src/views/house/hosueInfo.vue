@@ -81,33 +81,54 @@
                 <span>{{ props.row.houseNumber }}</span>
               </el-form-item>
               <el-form-item label="住房类型">
-                <span>{{ props.row.rentalType }}</span>
+                <span>{{ rentalTypeConvert(props.row.rentalType) }}</span>
               </el-form-item>
               <el-form-item label="报价">
                 <span>{{ props.row.quote }}</span>
               </el-form-item>
               <el-form-item label="整套面积">
-                <span>{{ props.row.area }}</span>
+                <span>{{ props.row.area }}M²</span>
               </el-form-item>
               <el-form-item label="室-厅-卫">
-                <span>{{ props.row.room }}-{{props.row.hall}}-{{props.row.toilet}}</span>
+                <span
+                  >{{ props.row.room }}-{{ props.row.hall }}-{{
+                    props.row.toilet
+                  }}</span
+                >
               </el-form-item>
+              <el-form-item label="所在楼层">
+                <span>{{ props.row.floor }}</span>
+              </el-form-item>
+              <el-form-item label="总楼层">
+                <span>{{ props.row.totalFloor }}</span>
+              </el-form-item>
+              <el-form-item label="房屋类型">
+                <span v-if="props.row.houseType == 0">楼梯房</span>
+                <span v-if="props.row.houseType == 1">电梯房</span>
+              </el-form-item>
+              <el-form-item label="发布时间">
+                <span>{{ props.row.releaseTime }}</span>
+              </el-form-item>
+
               <el-form-item label="用户头像">
-                <img
-                  :src="props.row.userImg"
-                  style="width: 100px; height: 100px"
-                />
+                <img :src="props.row.img" style="width: 100px; height: 100px" />
               </el-form-item>
-              <el-form-item label="用户注册时间">
-                <span>{{ props.row.userRegisterTime }}</span>
+              <el-form-item label="住房描述">
+                <span>{{ props.row.description }}</span>
               </el-form-item>
-              <el-form-item label="零钱">
-                <span>{{ props.row.userWallet }}</span>
+              <el-form-item label="特色">
+                <span>
+                  <p v-if="props.row.monthPay == 1">月付，</p>
+                  <p v-if="props.row.balcony == 1">阳台，</p>
+                  <p v-if="props.row.hardback == 1">精装修，</p>
+                  <p v-if="props.row.homeAppliances == 1">家电齐全</p>
+                </span>
               </el-form-item>
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column label="房屋 ID" sortable prop="id"> </el-table-column>
+        <el-table-column label="房屋 ID" sortable prop="houseId">
+        </el-table-column>
         <el-table-column label="登录用户" prop="userName"> </el-table-column>
         <el-table-column label="发布人" prop="releaseName"> </el-table-column>
         <el-table-column label="发布人电话" prop="releasePhone">
@@ -138,7 +159,7 @@
       </el-table>
     </div>
 
-    <!-- <div class="block">
+    <div class="block">
       <el-pagination
         background
         @size-change="handleSizeChange"
@@ -149,7 +170,7 @@
         :total="total"
       >
       </el-pagination>
-    </div> -->
+    </div>
     <!-- 修改对话框 -->
     <!-- <el-dialog title="用户修改" :visible.sync="editFormVisible" append-to-body>
       <el-form :model="formData">
@@ -209,22 +230,79 @@
     </el-dialog> -->
 
     <!-- 新增用户 -->
-    <!-- <el-dialog title="用户增加" :visible.sync="addFormVisible" append-to-body>
-      <el-form :model="addUser">
-        <el-form-item label="用户姓名" :label-width="formLabelWidth">
-          <el-input v-model="addUser.userName" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="用户账号" :label-width="formLabelWidth">
+    <el-dialog title="住房增加" :visible.sync="addFormVisible" append-to-body>
+      <el-form :model="addHouseInfo" :inline="true" class="demo-form-inline">
+        <el-form-item label="发布人" :label-width="formLabelWidth">
           <el-input
-            v-model="addUser.userAccount"
+            v-model="addHouseInfo.releaseName"
             auto-complete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item label="用户密码" :label-width="formLabelWidth">
+        <el-form-item label="发布人电话" :label-width="formLabelWidth">
           <el-input
-            v-model="addUser.userPassword"
+            v-model="addHouseInfo.releasePhone"
             auto-complete="off"
           ></el-input>
+        </el-form-item>
+        <el-form-item label="城市" :label-width="formLabelWidth">
+          <el-select
+            v-model="addHouseInfo.country"
+            placeholder="请选择城市"
+            @change="countryChange"
+          >
+            <el-option
+              v-for="item in countries"
+              :key="item.countryId"
+              :label="item.countryName"
+              :value="item.countryId"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="地区" :label-width="formLabelWidth">
+          <el-select
+            v-model="addHouseInfo.netherlands"
+            clearable
+            placeholder="请选择地区"
+          >
+            <el-option
+              v-for="item in netherlands"
+              :key="item.netherlandsId"
+              :label="item.netherlandsName"
+              :value="item.netherlandsId"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="详细地区" :label-width="formLabelWidth">
+          <el-select
+            v-model="addHouseInfo.detailNetherlands"
+            clearable
+            placeholder="请选择详细地区"
+          >
+            <el-option
+              v-for="item in detailNetherlands"
+              :key="item.countryId"
+              :label="item.countryName"
+              :value="item.countryId"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="小区" :label-width="formLabelWidth">
+          <el-select
+            v-model="addHouseInfo.community"
+            clearable
+            placeholder="请选择小区"
+          >
+            <el-option
+              v-for="item in communities"
+              :key="item.countryId"
+              :label="item.countryName"
+              :value="item.countryId"
+            >
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="用户头像" :label-width="formLabelWidth">
           <el-upload
@@ -237,8 +315,8 @@
             :data="imgData"
           >
             <img
-              v-if="addUser.userImg"
-              :src="addUser.userImg"
+              v-if="addHouseInfo.Img"
+              :src="addHouseInfo.Img"
               class="avatar"
               style="width: 100px; height: 100px"
             />
@@ -246,14 +324,17 @@
           </el-upload>
         </el-form-item>
         <el-form-item label="零钱" :label-width="formLabelWidth">
-          <el-input v-model="addUser.userWallet" auto-complete="off"></el-input>
+          <el-input
+            v-model="addHouseInfo.userWallet"
+            auto-complete="off"
+          ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="addFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="addUserConfirm">确 定</el-button>
       </div>
-    </el-dialog> -->
+    </el-dialog>
   </div>
 </template>
 
@@ -264,10 +345,15 @@ export default {
   data() {
     return {
       Netherlands: "",
-      Quote: 0,
-      RentalType: 0,
+      Quote: "",
+      RentalType: "",
       inputName: "",
+      country: "",
       detailSearch: false,
+      countries: [],
+      netherlands: [],
+      detailNetherlands: [],
+      communities: [],
       houseInfos: [],
       currentPage: 1,
       total: 0,
@@ -288,34 +374,74 @@ export default {
         userRegisterTime: "",
         userWallet: "",
       },
-      addUser: {
-        id: "",
-        userName: "",
-        userAccount: "",
-        userPassword: "",
-        userImg: "",
-        userWallet: "",
+      addHouseInfo: {
+        releaseName: "",
+        releasePhone: "",
+        country: "",
+        detailNetherlands: "",
+        netherlands: "",
+        community: "",
+        houseNumber: "",
+        rentalType: "",
+        quote: "",
+        area: "",
+        room: "",
+        hall: "",
+        toital: "",
+        floor: "",
+        totalFloor: "",
+        houseType: "",
       },
       formLabelWidth: "120px",
     };
   },
   methods: {
+    countryChange(val) {
+      request({
+        url:'/house/netherlands',
+        params:{
+          countryId:val
+        }
+      }).then(res=>{
+        this.netherlands = res.data.data
+        console.log(this.netherlands);
+      })
+    },
+    rentalTypeConvert(val) {
+      let type = "合租";
+      switch (val) {
+        case 1:
+          type = "合租";
+          break;
+        case 2:
+          type = "整租";
+          break;
+        case 3:
+          type = "公寓";
+          break;
+      }
+      return type;
+    },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
       request({
-        url: "/user/userList",
+        url: "/house/houseInfos",
         params: {
           page: val,
-          num: this.pageSize,
+          netherlands: this.Netherlands == "" ? 0 : this.Netherlands,
+          quote: this.Quote == "" ? 0 : this.Quote,
+          rentalType: this.RentalType == "" ? 0 : this.RentalType,
+          name: this.inputName,
+          limit: this.pageSize,
           userName: this.inputName,
         },
       })
         .then((res) => {
           // console.log(res.data);
           if (res.data.code == "200") {
-            this.users = res.data.data;
+            this.houseInfos = res.data.data;
             this.currentPage = res.data.currentPage;
             this.total = res.data.total;
           }
@@ -391,38 +517,38 @@ export default {
         .catch((err) => {});
       this.editFormVisible = false;
     },
-    deleteBtnUsers() {
-      this.$confirm("此操作将永久删除该用户, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(() => {
-          this.userIds.join(",");
-          console.log(this.userIds);
-          request({
-            url: "/user/usersDelete",
-            method: "post",
-            data: JSON.stringify(this.userIds),
-          }).then((res) => {
-            this.$message({
-              type: "success",
-              message: "删除成功!",
-            });
-            this.handleCurrentChange(1);
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除",
-          });
-        });
+    // deleteBtnUsers() {
+    //   this.$confirm("此操作将永久删除该用户, 是否继续?", "提示", {
+    //     confirmButtonText: "确定",
+    //     cancelButtonText: "取消",
+    //     type: "warning",
+    //   })
+    //     .then(() => {
+    //       this.userIds.join(",");
+    //       console.log(this.userIds);
+    //       request({
+    //         url: "/user/usersDelete",
+    //         method: "post",
+    //         data: JSON.stringify(this.userIds),
+    //       }).then((res) => {
+    //         this.$message({
+    //           type: "success",
+    //           message: "删除成功!",
+    //         });
+    //         this.handleCurrentChange(1);
+    //       });
+    //     })
+    //     .catch(() => {
+    //       this.$message({
+    //         type: "info",
+    //         message: "已取消删除",
+    //       });
+    //     });
 
-      for (let i = 0; i < this.multipleSelection.length; i++) {
-        this.userIds[i] = this.multipleSelection[i].id;
-      }
-    },
+    //   for (let i = 0; i < this.multipleSelection.length; i++) {
+    //     this.userIds[i] = this.multipleSelection[i].id;
+    //   }
+    // },
     handleAvatarSuccess(res, file) {
       this.addUser.userImg = res.data;
       this.formData.userImg = res.data;
@@ -440,15 +566,18 @@ export default {
       }
       return isJPG && isLt2M;
     },
-    addBtnUser() {
-      this.addUser.id = "";
-      this.addUser.userName = "";
-      this.addUser.userAccount = "";
-      this.addUser.userPassword = "";
-      this.addUser.userImg = "";
-      this.addUser.userWallet = "";
+    addBtnHouseInfo() {
+      request({
+        url: "/house/countries",
+      }).then((res) => {
+        this.countries = res.data.data;
+      });
+      this.addHouseInfo.releaseName = "";
+      this.addHouseInfo.releasePhone = "";
+      this.addHouseInfo.country = "";
+      this.addHouseInfo.netherlands = "";
       this.imgData = {
-        path: "bishe/user",
+        path: "bishe/house",
       };
       this.addFormVisible = true;
     },
@@ -474,18 +603,7 @@ export default {
         console.log(res);
       });
     },
-  },
-  beforeCreate() {
-    request({
-      url: "/manager/managerById",
-      params: {
-        id: localStorage.getItem("id"),
-      },
-    }).then((res) => {
-      if (res.data.code == "200") {
-        this.$store.commit(types.SETMANAGER, res.data.data[0]);
-      }
-    });
+    deleteBtnHouseInfos() {},
   },
   //data初始化后el还没绑定时
   created() {
@@ -493,16 +611,16 @@ export default {
       url: "/house/houseInfos",
       params: {
         page: 1,
-        netherlands: this.netherlands,
-        quote: this.quote,
-        rentalType: this.rentalType,
+        netherlands: this.Netherlands == "" ? 0 : this.Netherlands,
+        quote: this.Quote == "" ? 0 : this.Quote,
+        rentalType: this.RentalType == "" ? 0 : this.RentalType,
         name: this.inputName,
         limit: this.pageSize,
         userName: this.inputName,
       },
     })
       .then((res) => {
-        // console.log(res.data);
+        // console.log(res.data.data);
         if (res.data.code == "200") {
           this.houseInfos = res.data.data;
           this.currentPage = res.data.currentPage;
@@ -510,8 +628,6 @@ export default {
         }
       })
       .catch((err) => {});
-    // console.log(this.users);
-    // console.log("------");
   },
 };
 </script>
