@@ -264,6 +264,7 @@
             v-model="addHouseInfo.netherlands"
             clearable
             placeholder="请选择地区"
+            @change="netherlandsChange"
           >
             <el-option
               v-for="item in netherlands"
@@ -279,12 +280,13 @@
             v-model="addHouseInfo.detailNetherlands"
             clearable
             placeholder="请选择详细地区"
+            @change="detailNetherlandsChange"
           >
             <el-option
               v-for="item in detailNetherlands"
-              :key="item.countryId"
-              :label="item.countryName"
-              :value="item.countryId"
+              :key="item.detailNetherlandsId"
+              :label="item.detailNetherlandsName"
+              :value="item.detailNetherlandsId"
             >
             </el-option>
           </el-select>
@@ -297,9 +299,9 @@
           >
             <el-option
               v-for="item in communities"
-              :key="item.countryId"
-              :label="item.countryName"
-              :value="item.countryId"
+              :key="item.communityId"
+              :label="item.communityName"
+              :value="item.communityId"
             >
             </el-option>
           </el-select>
@@ -377,10 +379,10 @@ export default {
       addHouseInfo: {
         releaseName: "",
         releasePhone: "",
-        country: "",
-        detailNetherlands: "",
-        netherlands: "",
-        community: "",
+        countryId: "",
+        detailNetherlandsId: "",
+        netherlandsId: "",
+        communityId: "",
         houseNumber: "",
         rentalType: "",
         quote: "",
@@ -397,6 +399,10 @@ export default {
   },
   methods: {
     countryChange(val) {
+      this.addHouseInfo.countryId = val;
+      this.addHouseInfo.netherlandsId = ""
+      this.addHouseInfo.detailNetherlandsId = ""
+      this.addHouseInfo.communityId = ""
       request({
         url:'/house/netherlands',
         params:{
@@ -404,8 +410,39 @@ export default {
         }
       }).then(res=>{
         this.netherlands = res.data.data
-        console.log(this.netherlands);
       })
+    },
+    netherlandsChange(val){
+      this.addHouseInfo.netherlandsId = val
+      this.addHouseInfo.detailNetherlandsId = ""
+      this.addHouseInfo.communityId = ""
+      request({
+        url:'/house/detailNetherlands',
+        params:{
+          countryId:this.addHouseInfo.countryId,
+          netherlandsId:val
+        }
+      }).then(res=>{
+        this.detailNetherlands = res.data.data
+      })
+    },
+    detailNetherlandsChange(val){
+      this.addHouseInfo.detailNetherlandsId = val
+      this.addHouseInfo.communityId = ""
+      request({
+        url:'/house/communities',
+        params:{
+          countryId:this.addHouseInfo.countryId,
+          netherlandsId:this.addHouseInfo.netherlandsId,
+          detailNetherlandsId:val
+        }
+      }).then(res=>{
+        this.communities = res.data.data
+      })
+    },
+    communityChange(val){
+      this.addHouseInfo.communityId = val
+      console.log(val);
     },
     rentalTypeConvert(val) {
       let type = "合租";
@@ -574,8 +611,10 @@ export default {
       });
       this.addHouseInfo.releaseName = "";
       this.addHouseInfo.releasePhone = "";
-      this.addHouseInfo.country = "";
-      this.addHouseInfo.netherlands = "";
+      this.addHouseInfo.countryId = "";
+      this.addHouseInfo.netherlandsId = "";
+      this.addHouseInfo.detailNetherlandsId = "";
+      this.addHouseInfo.commnityId = "";
       this.imgData = {
         path: "bishe/house",
       };
