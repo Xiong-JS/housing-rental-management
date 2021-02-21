@@ -236,19 +236,22 @@
           <el-input
             v-model="addHouseInfo.releaseName"
             auto-complete="off"
+            style="width: 210px"
           ></el-input>
         </el-form-item>
         <el-form-item label="发布人电话" :label-width="formLabelWidth">
           <el-input
             v-model="addHouseInfo.releasePhone"
             auto-complete="off"
+            style="width: 210px"
           ></el-input>
         </el-form-item>
         <el-form-item label="城市" :label-width="formLabelWidth">
           <el-select
-            v-model="addHouseInfo.country"
+            v-model="addHouseInfo.countryId"
             placeholder="请选择城市"
             @change="countryChange"
+            style="width: 210px"
           >
             <el-option
               v-for="item in countries"
@@ -261,10 +264,11 @@
         </el-form-item>
         <el-form-item label="地区" :label-width="formLabelWidth">
           <el-select
-            v-model="addHouseInfo.netherlands"
+            v-model="addHouseInfo.netherlandsId"
             clearable
             placeholder="请选择地区"
             @change="netherlandsChange"
+            style="width: 210px"
           >
             <el-option
               v-for="item in netherlands"
@@ -277,10 +281,11 @@
         </el-form-item>
         <el-form-item label="详细地区" :label-width="formLabelWidth">
           <el-select
-            v-model="addHouseInfo.detailNetherlands"
+            v-model="addHouseInfo.detailNetherlandsId"
             clearable
             placeholder="请选择详细地区"
             @change="detailNetherlandsChange"
+            style="width: 210px"
           >
             <el-option
               v-for="item in detailNetherlands"
@@ -293,9 +298,11 @@
         </el-form-item>
         <el-form-item label="小区" :label-width="formLabelWidth">
           <el-select
-            v-model="addHouseInfo.community"
+            v-model="addHouseInfo.communityId"
             clearable
             placeholder="请选择小区"
+            @change="communityChange"
+            style="width: 210px"
           >
             <el-option
               v-for="item in communities"
@@ -306,7 +313,112 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="用户头像" :label-width="formLabelWidth">
+        <el-form-item label="门牌号" :label-width="formLabelWidth">
+          <el-input
+            v-model="addHouseInfo.houseNumber"
+            auto-complete="off"
+            style="width: 210px"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="租房类型" :label-width="formLabelWidth">
+          <el-select
+            v-model="addHouseInfo.rentalType"
+            clearable
+            placeholder="请选择住房类型"
+            style="width: 210px"
+          >
+            <el-option label="合租" value="1"></el-option>
+            <el-option label="整租" value="2"></el-option>
+            <el-option label="公寓" value="3"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="报价" :label-width="formLabelWidth">
+          <el-input
+            type="number"
+            v-model="addHouseInfo.quote"
+            auto-complete="off"
+            style="width: 210px"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="整租面积" :label-width="formLabelWidth">
+          <el-input
+            type="number"
+            v-model="addHouseInfo.area"
+            auto-complete="off"
+            style="width: 210px"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="室" :label-width="formLabelWidth">
+          <el-input
+            type="number"
+            v-model="addHouseInfo.room"
+            auto-complete="off"
+            style="width: 210px"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="厅" :label-width="formLabelWidth">
+          <el-input
+            type="number"
+            v-model="addHouseInfo.hall"
+            auto-complete="off"
+            style="width: 210px"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="卫" :label-width="formLabelWidth">
+          <el-input
+            type="number"
+            v-model="addHouseInfo.toilet"
+            auto-complete="off"
+            style="width: 210px"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="楼层" :label-width="formLabelWidth">
+          <el-input
+            type="number"
+            v-model="addHouseInfo.floor"
+            auto-complete="off"
+            style="width: 210px"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="总楼层" :label-width="formLabelWidth">
+          <el-input
+            type="number"
+            v-model="addHouseInfo.totalFloor"
+            auto-complete="off"
+            style="width: 210px"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="房子类型" :label-width="formLabelWidth">
+          <el-select
+            v-model="addHouseInfo.houseType"
+            clearable
+            placeholder="请选择房子类型"
+            style="width: 210px"
+          >
+            <el-option label="楼梯房" value="0"></el-option>
+            <el-option label="电梯房" value="1"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="特色" :label-width="formLabelWidth">
+          <el-checkbox-group v-model="addHouseInfo.characters">
+            <el-checkbox label="月付" name="character"></el-checkbox>
+            <el-checkbox label="精装房" name="character"></el-checkbox>
+            <el-checkbox label="有阳台" name="character"></el-checkbox>
+            <el-checkbox label="家电齐全" name="character"></el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+      </el-form>
+      <el-form :model="addHouseInfo">
+        <el-form-item label="描述" :label-width="formLabelWidth">
+          <el-input
+            type="textarea"
+            :rows="2"
+            placeholder="请输入内容"
+            v-model="addHouseInfo.description"
+          >
+          </el-input>
+        </el-form-item>
+        <el-form-item label="图片" :label-width="formLabelWidth">
           <el-upload
             class="avatar-uploader"
             :action="uploadUrl"
@@ -317,24 +429,18 @@
             :data="imgData"
           >
             <img
-              v-if="addHouseInfo.Img"
-              :src="addHouseInfo.Img"
+              v-if="addHouseInfo.img"
+              :src="addHouseInfo.img"
               class="avatar"
               style="width: 100px; height: 100px"
             />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
-        <el-form-item label="零钱" :label-width="formLabelWidth">
-          <el-input
-            v-model="addHouseInfo.userWallet"
-            auto-complete="off"
-          ></el-input>
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="addFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addUserConfirm">确 定</el-button>
+        <el-button type="primary" @click="addHouseConfirm">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -367,15 +473,15 @@ export default {
       uploadUrl: "http://localhost:8080/imgUpload",
       headers: { "u-token": localStorage.getItem("uToken") },
       imgData: "",
-      formData: {
-        id: "",
-        userName: "",
-        userAccount: "",
-        userPassword: "",
-        userImg: "",
-        userRegisterTime: "",
-        userWallet: "",
-      },
+      // formData: {
+      //   id: "",
+      //   userName: "",
+      //   userAccount: "",
+      //   userPassword: "",
+      //   userImg: "",
+      //   userRegisterTime: "",
+      //   userWallet: "",
+      // },
       addHouseInfo: {
         releaseName: "",
         releasePhone: "",
@@ -389,59 +495,78 @@ export default {
         area: "",
         room: "",
         hall: "",
-        toital: "",
+        toilet: "",
         floor: "",
         totalFloor: "",
         houseType: "",
+        description: "",
+        characters: [],
+        img: "",
       },
       formLabelWidth: "120px",
     };
   },
   methods: {
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === "image/jpeg";
+      const isLt2M = file.size / 1024 / 1024 < 1;
+
+      if (!isJPG) {
+        this.$message.error("上传头像图片只能是 JPG 格式!");
+      }
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 1MB!");
+      }
+      return isJPG && isLt2M;
+    },
+    handleAvatarSuccess(res, file) {
+      this.addHouseInfo.img = res.data;
+      this.$message.success("上传成功");
+    },
     countryChange(val) {
-      this.addHouseInfo.countryId = val;
-      this.addHouseInfo.netherlandsId = ""
-      this.addHouseInfo.detailNetherlandsId = ""
-      this.addHouseInfo.communityId = ""
+      // this.addHouseInfo.countryId = val;
+      // this.netherlands = []
+      // this.detailNetherlands = []
+      // this.communities = []
       request({
-        url:'/house/netherlands',
-        params:{
-          countryId:val
-        }
-      }).then(res=>{
-        this.netherlands = res.data.data
-      })
+        url: "/house/netherlands",
+        params: {
+          countryId: val,
+        },
+      }).then((res) => {
+        this.netherlands = res.data.data;
+      });
     },
-    netherlandsChange(val){
-      this.addHouseInfo.netherlandsId = val
-      this.addHouseInfo.detailNetherlandsId = ""
-      this.addHouseInfo.communityId = ""
+    netherlandsChange(val) {
+      // this.addHouseInfo.netherlandsId = val
+      // this.detailNetherlands = []
+      // this.communities = []
       request({
-        url:'/house/detailNetherlands',
-        params:{
-          countryId:this.addHouseInfo.countryId,
-          netherlandsId:val
-        }
-      }).then(res=>{
-        this.detailNetherlands = res.data.data
-      })
+        url: "/house/detailNetherlands",
+        params: {
+          countryId: this.addHouseInfo.countryId,
+          netherlandsId: val,
+        },
+      }).then((res) => {
+        this.detailNetherlands = res.data.data;
+      });
     },
-    detailNetherlandsChange(val){
-      this.addHouseInfo.detailNetherlandsId = val
-      this.addHouseInfo.communityId = ""
+    detailNetherlandsChange(val) {
+      // this.addHouseInfo.detailNetherlandsId = val
+      // this.communities = []
       request({
-        url:'/house/communities',
-        params:{
-          countryId:this.addHouseInfo.countryId,
-          netherlandsId:this.addHouseInfo.netherlandsId,
-          detailNetherlandsId:val
-        }
-      }).then(res=>{
-        this.communities = res.data.data
-      })
+        url: "/house/communities",
+        params: {
+          countryId: this.addHouseInfo.countryId,
+          netherlandsId: this.addHouseInfo.netherlandsId,
+          detailNetherlandsId: val,
+        },
+      }).then((res) => {
+        this.communities = res.data.data;
+      });
     },
-    communityChange(val){
-      this.addHouseInfo.communityId = val
+    communityChange(val) {
+      // this.addHouseInfo.communityId = val
       console.log(val);
     },
     rentalTypeConvert(val) {
@@ -494,7 +619,7 @@ export default {
       this.formData.userName = row.userName;
       this.formData.userAccount = row.userAccount;
       this.formData.userPassword = row.userPassword;
-      this.formData.userImg = row.userImg;
+      // this.formData.userImg = row.userImg;
       this.formData.userRegisterTime = row.userRegisterTime;
       this.formData.userWallet = row.userWallet;
       this.editFormVisible = true;
@@ -543,7 +668,7 @@ export default {
           id: this.formData.id,
           userName: this.formData.userName,
           userPassword: this.formData.userPassword,
-          userImg: this.formData.userImg,
+          // userImg: this.formData.userImg,
           userWallet: this.formData.userWallet,
         },
       })
@@ -586,23 +711,6 @@ export default {
     //     this.userIds[i] = this.multipleSelection[i].id;
     //   }
     // },
-    handleAvatarSuccess(res, file) {
-      this.addUser.userImg = res.data;
-      this.formData.userImg = res.data;
-      this.$message.success("上传成功");
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 1;
-
-      if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG 格式!");
-      }
-      if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 1MB!");
-      }
-      return isJPG && isLt2M;
-    },
     addBtnHouseInfo() {
       request({
         url: "/house/countries",
@@ -611,25 +719,53 @@ export default {
       });
       this.addHouseInfo.releaseName = "";
       this.addHouseInfo.releasePhone = "";
-      this.addHouseInfo.countryId = "";
-      this.addHouseInfo.netherlandsId = "";
-      this.addHouseInfo.detailNetherlandsId = "";
-      this.addHouseInfo.commnityId = "";
+      this.countries = [];
+      this.Netherlands = [];
+      this.detailNetherlands = [];
+      this.communities = [];
+      (this.addHouseInfo.houseNumber = ""),
+        (this.addHouseInfo.rentalType = ""),
+        (this.addHouseInfo.quote = ""),
+        (this.addHouseInfo.area = ""),
+        (this.addHouseInfo.room = ""),
+        (this.addHouseInfo.hall = ""),
+        (this.addHouseInfo.toilet = ""),
+        (this.addHouseInfo.floor = ""),
+        (this.addHouseInfo.totalFloor = ""),
+        (this.addHouseInfo.houseType = ""),
+        (this.addHouseInfo.description = ""),
+        (this.addHouseInfo.characters = []),
+        (this.addHouseInfo.img = "");
       this.imgData = {
         path: "bishe/house",
       };
       this.addFormVisible = true;
     },
-    addUserConfirm() {
+    addHouseConfirm() {
       request({
-        url: "/user",
+        url: "/house",
         method: "post",
         data: {
-          userName: this.addUser.userName,
-          userAccount: this.addUser.userAccount,
-          userPassword: this.addUser.userPassword,
-          userImg: this.addUser.userImg,
-          userWallet: this.addUser.userWallet,
+          releaseName: this.addHouseInfo.releaseName,
+          releasePhone: this.addHouseInfo.releasePhone,
+          countryId: this.addHouseInfo.countryId,
+          netherlandsId: this.addHouseInfo.netherlandsId,
+          detailNetherlandsId: this.addHouseInfo.detailNetherlandsId,
+          communityId: this.addHouseInfo.communityId,
+          houseNumber: this.addHouseInfo.houseNumber,
+          rentalType: this.addHouseInfo.rentalType,
+          quote: this.addHouseInfo.quote,
+          area: this.addHouseInfo.area,
+          room: this.addHouseInfo.room,
+          hall: this.addHouseInfo.hall,
+          toilet: this.addHouseInfo.toilet,
+          floor: this.addHouseInfo.floor,
+          totalFloor: this.addHouseInfo.totalFloor,
+          houseType: this.addHouseInfo.houseType,
+          description: this.addHouseInfo.description,
+          characters: this.addHouseInfo.characters.toString(),
+          img: this.addHouseInfo.img,
+          managerId:this.$store.state.manager.id
         },
       }).then((res) => {
         this.addFormVisible = false;
@@ -687,5 +823,28 @@ export default {
 .el-table--border th.gutter:last-of-type {
   display: table-cell !important;
   width: 50px !important;
+}
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
 }
 </style>
