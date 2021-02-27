@@ -467,6 +467,7 @@ export default {
       currentPage: 1,
       total: 0,
       pageSize: 8,
+      houseIds: [],
       multipleSelection: [],
       editFormVisible: false,
       addFormVisible: false,
@@ -629,6 +630,7 @@ export default {
       };
     },
     handleDelete(index, row) {
+      console.log(row.houseId);
       this.$confirm("此操作将永久删除该用户, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -636,10 +638,10 @@ export default {
       })
         .then(() => {
           request({
-            url: "/user/userDelete",
-            method: "post",
+            url: "/house/house-delete",
+            method: "delete",
             data: {
-              id: row.id,
+              houseId: row.houseId,
             },
           }).then((res) => {
             this.$message({
@@ -658,7 +660,6 @@ export default {
       // console.log(index, row);
     },
     handleSelectionChange(val) {
-      // console.log(val);
       this.multipleSelection = val;
     },
     editUserConfirm() {
@@ -766,7 +767,7 @@ export default {
           description: this.addHouseInfo.description,
           characters: this.addHouseInfo.characters.toString(),
           img: this.addHouseInfo.img,
-          managerId:this.$store.state.manager.id
+          managerId: this.$store.state.manager.id,
         },
       }).then((res) => {
         this.addFormVisible = false;
@@ -779,7 +780,41 @@ export default {
         console.log(res);
       });
     },
-    deleteBtnHouseInfos() {},
+    deleteBtnHouseInfos() {
+      if (this.houseIds.length == 0) {
+        this.$message.warning("选择你要删除的数据!");
+        return;
+      }
+      this.$confirm("此操作将永久删除该用户, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          for (let i = 0; i < this.multipleSelection.length; i++) {
+            this.houseIds[i] = this.multipleSelection[i].houseId;
+          }
+          this.houseIds.join(",");
+          console.log(this.houseIds);
+          request({
+            url: "/house/houses-delete",
+            method: "delete",
+            data: JSON.stringify(this.houseIds),
+          }).then((res) => {
+            this.$message({
+              type: "success",
+              message: "删除成功!",
+            });
+            this.handleCurrentChange(1);
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
+    },
   },
   //data初始化后el还没绑定时
   created() {
