@@ -60,9 +60,24 @@
                 <span>系统基础管理</span>
               </template>
               <el-menu-item-group>
-                <el-menu-item index="1-1">
+                <el-menu-item index="3-1">
                   <router-link to="/carousel" active-class="active">
-                    轮播图管理</router-link
+                    轮播图信息管理</router-link
+                  >
+                </el-menu-item>
+                <el-menu-item index="3-2">
+                  <router-link to="/country" active-class="active">
+                    城市信息管理</router-link
+                  >
+                </el-menu-item>
+                <el-menu-item index="3-3">
+                  <router-link to="/netherlands" active-class="active">
+                    地区信息管理</router-link
+                  >
+                </el-menu-item>
+                <el-menu-item index="3-4">
+                  <router-link to="/detailNetherlands" active-class="active">
+                    详细地区&小区信息管理</router-link
                   >
                 </el-menu-item>
               </el-menu-item-group>

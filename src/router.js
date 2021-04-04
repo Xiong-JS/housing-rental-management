@@ -4,10 +4,13 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 const HouseInfo = () => import('./views/house/hosueInfo.vue')
-const User = () => import('./views/user//user.vue')
+const User = () => import('./views/user/user.vue')
 const Rental = () => import('./views/house/rental.vue')
 const SellList = () => import('./views/house/sellList.vue')
-const Carousel = ()=>import('./components/carousel/Carousel.vue')
+const Carousel = ()=>import('./views/baseInfo/carousel/Carousel.vue')
+const Country = ()=>import('./views/baseInfo/country/Country.vue')
+const Netherlands = ()=>import('./views/baseInfo/netherlands/Netherlands.vue')
+const DetailNetherlands = ()=>import('./views/baseInfo/dedtailNetherlands/DetailNetherlands.vue')
 
 
 export default new Router({
@@ -36,6 +39,18 @@ export default new Router({
     {
       path:'/carousel',
       component:Carousel
+    },
+    {
+      path:'/country',
+      component:Country
+    },
+    {
+      path:'/netherlands',
+      component:Netherlands
+    },
+    {
+      path:'/detailNetherlands',
+      component:DetailNetherlands
     }
   ]
 })

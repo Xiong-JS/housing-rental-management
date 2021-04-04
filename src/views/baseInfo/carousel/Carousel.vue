@@ -20,7 +20,8 @@
         @selection-change="handleSelectionChange"
         ref="multipleTable"
       >
-        <el-table-column label="ID" sortable prop="id" width="60"> </el-table-column>
+        <el-table-column label="ID" sortable prop="id" width="60">
+        </el-table-column>
         <el-table-column label="轮播图样图">
           <template slot-scope="scope">
             <el-image
@@ -30,7 +31,8 @@
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column label="轮播图地址" prop="imgUrl" width="450"> </el-table-column>
+        <el-table-column label="轮播图地址" prop="imgUrl" width="450">
+        </el-table-column>
         <el-table-column label="轮播图标题" prop="imgTitle"> </el-table-column>
 
         <el-table-column fixed="right" label="操作" width="170">
@@ -52,7 +54,6 @@
           </template>
         </el-table-column>
       </el-table>
-
     </div>
 
     <div class="block">
@@ -103,7 +104,10 @@
           </el-upload>
         </el-form-item>
         <el-form-item label="标题" :label-width="formLabelWidth">
-          <el-input v-model="addCarousel.imgTitle" auto-complete="off"></el-input>
+          <el-input
+            v-model="addCarousel.imgTitle"
+            auto-complete="off"
+          ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -115,7 +119,7 @@
 </template>
 
 <script>
-import request from "../../network/request";
+import request from "../../../network/request";
 export default {
   data() {
     return {
@@ -127,16 +131,16 @@ export default {
       headers: { "u-token": localStorage.getItem("uToken") },
       editFormVisible: false,
       addFormVisible: false,
-      formLabelWidth:'120px',
-      formData:{
-        id:0,
-        imgTitle:''
+      formLabelWidth: "120px",
+      formData: {
+        id: 0,
+        imgTitle: "",
       },
-      imgData:'',
-      addCarousel:{
-        imgUrl:'',
-        imgTitle:''
-      }
+      imgData: "",
+      addCarousel: {
+        imgUrl: "",
+        imgTitle: "",
+      },
     };
   },
   methods: {
@@ -150,7 +154,7 @@ export default {
           request({
             url: "/carousel",
             method: "delete",
-            data: row.id,
+            data: { id: row.id },
           }).then((res) => {
             this.$message({
               type: "success",
@@ -166,32 +170,32 @@ export default {
           });
         });
     },
-    handleEdit(index, row){
-      this.editFormVisible = true
-      this.formData.imgTitle = row.imgTitle
-      this.formData.id = row.id
+    handleEdit(index, row) {
+      this.editFormVisible = true;
+      this.formData.imgTitle = row.imgTitle;
+      this.formData.id = row.id;
     },
-    editCarouselConfirm(){
+    editCarouselConfirm() {
       request({
-        url:'/carousel',
-        method:'patch',
-        data:{
-          id:this.formData.id,
-          imgTitle:this.formData.imgTitle
-        }
-      }).then(res=>{
-        this.$message.success('修改成功!')
+        url: "/carousel",
+        method: "patch",
+        data: {
+          id: this.formData.id,
+          imgTitle: this.formData.imgTitle,
+        },
+      }).then((res) => {
+        this.$message.success("修改成功!");
         this.handleCurrentChange(1);
-      })
-      this.editFormVisible = false
+      });
+      this.editFormVisible = false;
     },
     addBtnCarouse() {
-      this.addFormVisible = true
+      this.addFormVisible = true;
       this.imgData = {
         path: "bishe/carousel",
       };
-      this.addCarousel.imgTitle = ''
-      this.addCarousel.imgUrl = ''
+      this.addCarousel.imgTitle = "";
+      this.addCarousel.imgUrl = "";
     },
     handleSelectionChange() {},
     handleSizeChange(val) {},
@@ -200,7 +204,7 @@ export default {
         url: "/carousel",
         params: {
           limit: val,
-          pageSize: this.pageSize
+          pageSize: this.pageSize,
         },
       })
         .then((res) => {
@@ -215,7 +219,7 @@ export default {
     },
     handleAvatarSuccess(res, file) {
       console.log(res);
-      this.addCarousel.imgUrl = res.data
+      this.addCarousel.imgUrl = res.data;
       this.$message.success("上传成功");
     },
     beforeAvatarUpload(file) {
@@ -226,24 +230,24 @@ export default {
         this.$message.error("上传头像图片只能是 JPG 格式!");
       }
       if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 1MB!");
+        this.$message.error("上传头像图片大小不能超过 2MB!");
       }
       return isJPG && isLt2M;
     },
-    addCarouselConfirm(){
+    addCarouselConfirm() {
       request({
-        url: '/carousel',
-        method:'put',
-        data:{
-          imgUrl:this.addCarousel.imgUrl,
-          imgTitle:this.addCarousel.imgTitle
-        }
-      }).then(res =>{
-        this.$message.success('添加成功')
-        this.addFormVisible = false
-        this.handleCurrentChange(1)
-      })
-    }
+        url: "/carousel",
+        method: "put",
+        data: {
+          imgUrl: this.addCarousel.imgUrl,
+          imgTitle: this.addCarousel.imgTitle,
+        },
+      }).then((res) => {
+        this.$message.success("添加成功");
+        this.addFormVisible = false;
+        this.handleCurrentChange(1);
+      });
+    },
   },
   created() {
     request({
@@ -255,7 +259,7 @@ export default {
     })
       .then((res) => {
         this.carousel = res.data.data;
-        this.total = res.data.total
+        this.total = res.data.total;
         console.log(res);
       })
       .catch((err) => {});
