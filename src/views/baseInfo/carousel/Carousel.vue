@@ -16,7 +16,6 @@
         max-height="450"
         style="width: 100%"
         stripe
-        border
         @selection-change="handleSelectionChange"
         ref="multipleTable"
       >
