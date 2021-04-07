@@ -16,11 +16,12 @@
             background-color="#545c64"
             text-color="#fff"
             active-text-color="#ffd04b"
+            style="text-align:left"
           >
             <el-submenu index="1">
               <template slot="title">
                 <!-- <i class="el-icon-location"></i> -->
-                <i class="iconfont icon-zhufang"></i>
+                <i class="iconfont icon-account-fill"></i>
                 <span>人员信息</span>
               </template>
               <el-menu-item-group>
@@ -33,7 +34,7 @@
             </el-submenu>
             <el-submenu index="2">
               <template slot="title">
-                <i class="el-icon-menu"></i>
+                <i class="iconfont icon-zhufang"></i>
                 <span>住房管理</span>
               </template>
               <el-menu-item-group>
@@ -56,7 +57,7 @@
             </el-submenu>
             <el-submenu index="3">
               <template slot="title">
-                <i class="el-icon-edit-outline"></i>
+                <i class="iconfont icon-jichuxinxi"></i>
                 <span>系统基础管理</span>
               </template>
               <el-menu-item-group>
@@ -186,5 +187,10 @@ body > .el-container {
 a {
   text-decoration: none;
   color: white;
+}
+
+/* 解决表格对不齐的问题，但是未解决 */
+.el-table th.gutter {
+  display: table-cell !important;
 }
 </style>

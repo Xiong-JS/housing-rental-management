@@ -725,19 +725,19 @@ export default {
       this.Netherlands = [];
       this.detailNetherlands = [];
       this.communities = [];
-      (this.addHouseInfo.houseNumber = ""),
-        (this.addHouseInfo.rentalType = ""),
-        (this.addHouseInfo.quote = ""),
-        (this.addHouseInfo.area = ""),
-        (this.addHouseInfo.room = ""),
-        (this.addHouseInfo.hall = ""),
-        (this.addHouseInfo.toilet = ""),
-        (this.addHouseInfo.floor = ""),
-        (this.addHouseInfo.totalFloor = ""),
-        (this.addHouseInfo.houseType = ""),
-        (this.addHouseInfo.description = ""),
-        (this.addHouseInfo.characters = []),
-        (this.addHouseInfo.img = "");
+      this.addHouseInfo.houseNumber = "";
+      this.addHouseInfo.rentalType = "";
+      this.addHouseInfo.quote = "";
+      this.addHouseInfo.area = "";
+      this.addHouseInfo.room = "";
+      this.addHouseInfo.hall = "";
+      this.addHouseInfo.toilet = "";
+      this.addHouseInfo.floor = "";
+      this.addHouseInfo.totalFloor = "";
+      this.addHouseInfo.houseType = "";
+      this.addHouseInfo.description = "";
+      this.addHouseInfo.characters = [];
+      this.addHouseInfo.img = "";
       this.imgData = {
         path: "bishe/house",
       };

@@ -171,7 +171,7 @@
                   type="danger"
                   size="small"
                   class="el-icon-delete"
-                  @click="handleCommunityDelete(scope.$index, scope.row)"
+                  @click="handleCommunityDelete(scope.row)"
                   >删除</el-button
                 >
               </template>
@@ -205,59 +205,48 @@
           :label-width="formLabelWidth"
           prop="countryId"
         >
-          <el-select
-            v-model="addCommunity.countryId"
-            clearable
-            placeholder="请选择城市"
-            @visible-change="getCountries"
-            @change="countryOtherChange"
-            style="width: 342px"
-          >
-            <el-option
-              v-for="item in countries"
-              :key="item.countryId"
-              :label="item.countryName"
-              :value="item.countryId"
-            >
-            </el-option>
-          </el-select>
+          <el-input
+            v-model="countryName"
+            auto-complete="off"
+            readonly
+          ></el-input>
         </el-form-item>
         <el-form-item
           label="地区"
           :label-width="formLabelWidth"
           prop="netherlandsId"
         >
-          <el-select
-            v-model="addCommunity.netherlandsId"
-            clearable
-            placeholder="请选择地区"
-            style="width: 342px"
-          >
-            <el-option
-              v-for="item in otherNetherlands"
-              :key="item.netherlandsId"
-              :label="item.netherlandsName"
-              :value="item.netherlandsId"
-            >
-            </el-option>
-          </el-select>
+          <el-input
+            v-model="netherlandsName"
+            auto-complete="off"
+            readonly
+          ></el-input>
         </el-form-item>
         <el-form-item
           label="详细地区"
           :label-width="formLabelWidth"
-          prop="detailNetherlandsName"
+          prop="detailNetherlandsId"
         >
           <el-input
-            v-model="addDetailNetherlands.detailNetherlandsName"
+            v-model="detailNetherlandsName"
+            auto-complete="off"
+            readonly
+          ></el-input>
+        </el-form-item>
+        <el-form-item
+          label="小区"
+          :label-width="formLabelWidth"
+          prop="community"
+        >
+          <el-input
+            v-model="addCommunity.communityName"
             auto-complete="off"
           ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="addFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addDetailNetherlandsConfirm"
-          >确 定</el-button
-        >
+        <el-button @click="addCommunityFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addCommunityConfirm">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -268,14 +257,15 @@ import request from "../../../network/request";
 export default {
   data() {
     return {
-      detailNetherlandsId: "",
+      countryName: "",
+      netherlandsName: "",
       detailNetherlandsName: "",
       countries: [],
       netherlands: [],
       communities: [],
-      otherNetherlands:[],
-      detailNetherlands:[],
+      otherNetherlands: [],
       detailNetherlands: [],
+      otherDetailNetherlands: [],
       currentPage: 1,
       communityCurrentPage: 1,
       communityTotal: 0,
@@ -294,7 +284,7 @@ export default {
         countryId: "",
         netherlandsId: "",
         detailNetherlandsId: "",
-        community: "",
+        communityName: "",
       },
     };
   },
@@ -325,13 +315,41 @@ export default {
           });
         });
     },
+    handleCommunityDelete(row){
+      this.$confirm("此操作将永久删除该城市, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          request({
+            url: "/community",
+            method: "delete",
+            data: { communityId: row.communityId },
+          }).then((res) => {
+            this.$message({
+              type: "success",
+              message: "删除成功!",
+            });
+            this.handleCommunityCurrentChange(1);
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
+    },
     handleCommunityCurrentChange(val) {
       request({
         url: "/community",
         params: {
           limit: val,
           pageSize: this.pageSize,
-          detailNetherlandsId: this.detailNetherlandsId,
+          detailNetherlandsId: this.addCommunity.detailNetherlandsId,
+          netherlandsId: this.addCommunity.netherlandsId,
+          countryId: this.addCommunity.countryId,
         },
       }).then((res) => {
         if (res.data.code == "200") {
@@ -344,7 +362,11 @@ export default {
     lookCommunity(row) {
       this.communityVisible = true;
       this.detailNetherlandsName = row.detailNetherlandsName;
-      this.detailNetherlandsId = row.detailNetherlandsId;
+      this.addCommunity.detailNetherlandsId = row.detailNetherlandsId;
+      this.addCommunity.netherlandsId = row.netherlandsId;
+      this.addCommunity.countryId = row.countryId;
+      this.countryName = row.countryName;
+      this.netherlandsName = row.netherlandsName;
       this.handleCommunityCurrentChange(1);
     },
     addBtnDetailNetherlands() {
@@ -387,6 +409,22 @@ export default {
         this.handleCurrentChange(1);
       });
     },
+    addCommunityConfirm() {
+      request({
+        url: "/community",
+        method: "put",
+        data: {
+          detailNetherlandsId: this.addCommunity.detailNetherlandsId,
+          countryId: this.addCommunity.countryId,
+          netherlandsId: this.addCommunity.netherlandsId,
+          communityName: this.addCommunity.communityName,
+        },
+      }).then((res) => {
+        this.$message.success("添加成功");
+        this.addCommunityFormVisible = false;
+        this.handleCommunityCurrentChange(1);
+      });
+    },
     getCountries() {
       request({
         url: "/house/countries",
@@ -411,7 +449,18 @@ export default {
           countryId: this.addCommunity.countryId,
         },
       }).then((res) => {
-        this.netherlands = res.data.data;
+        this.otherNetherlands = res.data.data;
+      });
+    },
+    netherlandsChange(val) {
+      request({
+        url: "/house/detailNetherlands",
+        params: {
+          countryId: this.addCommunity.countryId,
+          detailNetherlandsId: this.addCommunity.detailNetherlandsId,
+        },
+      }).then((res) => {
+        this.otherDetailNetherlands = res.data.data;
       });
     },
     addBtnCommunity() {
