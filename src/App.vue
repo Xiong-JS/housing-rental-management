@@ -2,110 +2,114 @@
   <div id="app">
     <div v-if="getToken">
       <el-container style="width: 100%; height: 100%; position: fixed">
-      <el-header>
-        {{ $store.state.manager.id }}
-        
-      </el-header>
-      <el-container>
-        <el-aside width="200px">
-          <el-menu
-            default-active="2"
-            class="el-menu-vertical-demo"
-            @open="handleOpen"
-            @close="handleClose"
-            background-color="#545c64"
-            text-color="#fff"
-            active-text-color="#ffd04b"
-            style="text-align:left"
-          >
-            <el-submenu index="1">
-              <template slot="title">
-                <!-- <i class="el-icon-location"></i> -->
-                <i class="iconfont icon-account-fill"></i>
-                <span>人员信息</span>
-              </template>
-              <el-menu-item-group>
-                <el-menu-item index="1-1">
-                  <router-link to="/user" active-class="active">
-                    用户信息</router-link
-                  >
-                </el-menu-item>
-              </el-menu-item-group>
-            </el-submenu>
-            <el-submenu index="2">
-              <template slot="title">
-                <i class="iconfont icon-zhufang"></i>
-                <span>住房管理</span>
-              </template>
-              <el-menu-item-group>
-                <el-menu-item index="2-1">
-                  <router-link to="/houseInfo" active-class="active">
-                    住房信息</router-link
-                  >
-                </el-menu-item>
-                <el-menu-item index="2-2">
-                  <router-link to="/rental" active-class="active"
-                    >出租信息</router-link
-                  >
-                </el-menu-item>
-                <el-menu-item index="2-3">
-                  <router-link to="/sellList" active-class="active"
-                    >订单信息</router-link
-                  >
-                </el-menu-item>
-              </el-menu-item-group>
-            </el-submenu>
-            <el-submenu index="3">
-              <template slot="title">
-                <i class="iconfont icon-jichuxinxi"></i>
-                <span>系统基础管理</span>
-              </template>
-              <el-menu-item-group>
-                <el-menu-item index="3-1">
-                  <router-link to="/carousel" active-class="active">
-                    轮播图信息管理</router-link
-                  >
-                </el-menu-item>
-                <el-menu-item index="3-2">
-                  <router-link to="/country" active-class="active">
-                    城市信息管理</router-link
-                  >
-                </el-menu-item>
-                <el-menu-item index="3-3">
-                  <router-link to="/netherlands" active-class="active">
-                    地区信息管理</router-link
-                  >
-                </el-menu-item>
-                <el-menu-item index="3-4">
-                  <router-link to="/detailNetherlands" active-class="active">
-                    详细地区&小区信息管理</router-link
-                  >
-                </el-menu-item>
-              </el-menu-item-group>
-            </el-submenu>
-          </el-menu>
-        </el-aside>
+        <el-header>
+          <span>{{
+            $store.state.manager.managerName
+          }}</span>
+        </el-header>
         <el-container>
-          <el-main
-            ><keep-alive><router-view></router-view></keep-alive
-          ></el-main>
-          <el-footer>@2021-01 2021-06</el-footer>
+          <el-aside width="200px">
+            <el-menu
+              default-active="2"
+              class="el-menu-vertical-demo"
+              @open="handleOpen"
+              @close="handleClose"
+              background-color="#545c64"
+              text-color="#fff"
+              active-text-color="#ffd04b"
+              style="text-align: left"
+            >
+              <el-submenu index="1">
+                <template slot="title">
+                  <i class="iconfont icon-account-fill"></i>
+                  <span>人员信息</span>
+                </template>
+                <el-menu-item-group>
+                  <el-menu-item index="1-1">
+                    <router-link to="/user" active-class="active">
+                      用户信息</router-link
+                    >
+                  </el-menu-item>
+                </el-menu-item-group>
+              </el-submenu>
+              <el-submenu index="2">
+                <template slot="title">
+                  <i class="iconfont icon-zhufang"></i>
+                  <span>住房管理</span>
+                </template>
+                <el-menu-item-group>
+                  <el-menu-item index="2-1">
+                    <router-link to="/audit" active-class="active">
+                      住房审核</router-link
+                    >
+                  </el-menu-item>
+                  <el-menu-item index="2-2">
+                    <router-link to="/houseInfo" active-class="active">
+                      住房信息</router-link
+                    >
+                  </el-menu-item>
+                  <el-menu-item index="2-3">
+                    <router-link to="/rental" active-class="active"
+                      >出租信息</router-link
+                    >
+                  </el-menu-item>
+                  <el-menu-item index="2-4">
+                    <router-link to="/sellList" active-class="active"
+                      >订单信息</router-link
+                    >
+                  </el-menu-item>
+                </el-menu-item-group>
+              </el-submenu>
+              <el-submenu index="3">
+                <template slot="title">
+                  <i class="iconfont icon-jichuxinxi"></i>
+                  <span>系统基础管理</span>
+                </template>
+                <el-menu-item-group>
+                  <el-menu-item index="3-1">
+                    <router-link to="/carousel" active-class="active">
+                      轮播图信息管理</router-link
+                    >
+                  </el-menu-item>
+                  <el-menu-item index="3-2">
+                    <router-link to="/country" active-class="active">
+                      城市信息管理</router-link
+                    >
+                  </el-menu-item>
+                  <el-menu-item index="3-3">
+                    <router-link to="/netherlands" active-class="active">
+                      地区信息管理</router-link
+                    >
+                  </el-menu-item>
+                  <el-menu-item index="3-4">
+                    <router-link to="/detailNetherlands" active-class="active">
+                      详细地区&小区信息管理</router-link
+                    >
+                  </el-menu-item>
+                </el-menu-item-group>
+              </el-submenu>
+            </el-menu>
+          </el-aside>
+          <el-container>
+            <el-main
+              ><keep-alive><router-view></router-view></keep-alive
+            ></el-main>
+            <el-footer>@2021-01 2021-06</el-footer>
+          </el-container>
         </el-container>
       </el-container>
-    </el-container>
     </div>
     <div v-else>
-      {{loginFailed()}}
+      {{ loginFailed() }}
     </div>
-    
   </div>
 </template>
 
 <script>
 export default {
   computed: {
-    getToken:function() {
-      return localStorage.getItem("uToken") != 'undefined';
+    getToken: function () {
+      return localStorage.getItem("uToken") != "undefined";
     },
   },
   methods: {
@@ -115,15 +119,15 @@ export default {
     handleClose(key, keyPath) {
       console.log(key, keyPath);
     },
-    loginFailed(){
-      this.$message.error('未登录，请登录！');
+    loginFailed() {
+      this.$message.error("未登录，请登录！");
       setTimeout(() => {
-         window.location.href="http://127.0.0.1:8083/housing-rental-management/login.html"
+        window.location.href =
+          "http://127.0.0.1:8083/housing-rental-management/login.html";
       }, 1000);
-     
-    }
+    },
   },
-  beforeCreate(){
+  beforeCreate() {
     var urlHead = "";
     var url = location.search; //获取url中"?"符后的字串
     var theRequest = new Object();
@@ -139,30 +143,35 @@ export default {
     let uToken = theRequest.uToken;
     let id = theRequest.id;
     localStorage.setItem("uToken", uToken);
-    localStorage.setItem("id",id);
-  }
+    localStorage.setItem("id", id);
+  },
 };
 </script>
 
 <style>
 @import url("./assets/img/icon/iconfont.css");
-.el-header,
+.el-header {
+  background-color: white;
+  color: #333;
+  text-align: center;
+  line-height: 60px;
+}
 .el-footer {
-  background-color: #b3c0d1;
+  background-color: #e2e2e2;
   color: #333;
   text-align: center;
   line-height: 60px;
 }
 
 .el-aside {
-  background-color: #d3dce6;
+  background-color: rgb(84, 92, 100);
   color: #333;
   text-align: center;
   line-height: 200px;
 }
 
 .el-main {
-  background-color: #e9eef3;
+  background-color: #f5f5f5;
   color: #333;
   text-align: center;
   /* line-height: 160px; */

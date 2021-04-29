@@ -86,6 +86,9 @@
               <el-form-item label="报价">
                 <span>{{ props.row.quote }}</span>
               </el-form-item>
+              <el-form-item label="押金">
+                <span>{{ props.row.cashPledge }}</span>
+              </el-form-item>
               <el-form-item label="整套面积">
                 <span>{{ props.row.area }}M²</span>
               </el-form-item>
@@ -129,8 +132,6 @@
         </el-table-column>
         <el-table-column label="房屋 ID" sortable prop="houseId">
         </el-table-column>
-        <!-- <el-table-column label="登录用户" prop="userName"> </el-table-column> -->
-        <!-- <el-table-column label="登录用户" prop="userName"> </el-table-column> -->
         <el-table-column label="发布人" prop="releaseName"> </el-table-column>
         <el-table-column label="发布人电话" prop="releasePhone">
         </el-table-column>

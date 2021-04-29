@@ -11,6 +11,7 @@ const Carousel = ()=>import('./views/baseInfo/carousel/Carousel.vue')
 const Country = ()=>import('./views/baseInfo/country/Country.vue')
 const Netherlands = ()=>import('./views/baseInfo/netherlands/Netherlands.vue')
 const DetailNetherlands = ()=>import('./views/baseInfo/dedtailNetherlands/DetailNetherlands.vue')
+const Audit = () =>import('./views/house/Audit.vue')
 
 
 export default new Router({
@@ -51,6 +52,10 @@ export default new Router({
     {
       path:'/detailNetherlands',
       component:DetailNetherlands
+    },
+    {
+      path:'/audit',
+      component:Audit
     }
   ]
 })
