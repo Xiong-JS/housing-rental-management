@@ -434,18 +434,6 @@ export default {
       });
     },
   },
-  beforeCreate() {
-    request({
-      url: "/manager/managerById",
-      params: {
-        id: localStorage.getItem("id"),
-      },
-    }).then((res) => {
-      if (res.data.code == "200") {
-        this.$store.commit(types.SETMANAGER, res.data.data[0]);
-      }
-    });
-  },
   //data初始化后el还没绑定时
   created() {
     request({

@@ -3,9 +3,9 @@
     <div v-if="getToken">
       <el-container style="width: 100%; height: 100%; position: fixed">
         <el-header>
-          <span>{{
-            $store.state.manager.managerName
-          }}</span>
+          <div class="personal" v-popover:popover>
+            <span>{{ manager.managerName }}</span>
+          </div>
         </el-header>
         <el-container>
           <el-aside width="200px">
@@ -50,12 +50,12 @@
                   </el-menu-item>
                   <el-menu-item index="2-3">
                     <router-link to="/rental" active-class="active"
-                      >出租信息</router-link
+                      >出租管理</router-link
                     >
                   </el-menu-item>
                   <el-menu-item index="2-4">
                     <router-link to="/sellList" active-class="active"
-                      >订单信息</router-link
+                      >订单管理</router-link
                     >
                   </el-menu-item>
                 </el-menu-item-group>
@@ -86,6 +86,24 @@
                       详细地区&小区信息管理</router-link
                     >
                   </el-menu-item>
+                  <el-menu-item index="3-5">
+                    <router-link to="/comment" active-class="active">
+                      评论管理</router-link
+                    >
+                  </el-menu-item>
+                </el-menu-item-group>
+              </el-submenu>
+              <el-submenu index="4">
+                <template slot="title">
+                  <i class="iconfont icon-graph"></i>
+                  <span>图表统计</span>
+                </template>
+                <el-menu-item-group>
+                  <el-menu-item index="4-1">
+                    <router-link to="/graph" active-class="active">
+                      图表统计</router-link
+                    >
+                  </el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
             </el-menu>
@@ -102,14 +120,36 @@
     <div v-else>
       {{ loginFailed() }}
     </div>
+    <el-popover ref="popover" placement="bottom" width="100" trigger="hover">
+      <div>
+        <!-- <div
+              class="personal-center"
+              @click="personalCenter(manager.id)"
+            >
+              <i class="iconfont icon-people" style="margin-left: 10px"></i
+              ><span style="margin-left: 10px">个人中心</span>
+            </div>
+            <div style="height:1px;background-color: #e6e6e6;"></div> -->
+        <div class="exit" @click="exit">
+          <i class="iconfont icon-exit" style="margin-left: 10px"></i
+          ><span style="margin-left: 10px">退出</span>
+        </div>
+      </div>
+    </el-popover>
   </div>
 </template>
 
 <script>
+import request from "./network/request";
 export default {
+  data() {
+    return {
+      manager: {},
+    };
+  },
   computed: {
     getToken: function () {
-      return localStorage.getItem("uToken") != "undefined";
+      return sessionStorage.getItem("uToken") != "undefined";
     },
   },
   methods: {
@@ -126,9 +166,10 @@ export default {
           "http://127.0.0.1:8083/housing-rental-management/login.html";
       }, 1000);
     },
+    personalCenter(id) {},
+    exit() {},
   },
   beforeCreate() {
-    var urlHead = "";
     var url = location.search; //获取url中"?"符后的字串
     var theRequest = new Object();
     if (url.indexOf("?") != -1) {
@@ -142,8 +183,18 @@ export default {
     }
     let uToken = theRequest.uToken;
     let id = theRequest.id;
-    localStorage.setItem("uToken", uToken);
-    localStorage.setItem("id", id);
+    sessionStorage.setItem("uToken", uToken);
+    sessionStorage.setItem("id", id);
+  },
+  created() {
+    request({
+      url: "/manager/managerById",
+      params: {
+        id: sessionStorage.getItem("id"),
+      },
+    }).then((res) => {
+      this.manager = res.data.data;
+    });
   },
 };
 </script>
@@ -153,8 +204,12 @@ export default {
 .el-header {
   background-color: white;
   color: #333;
-  text-align: center;
   line-height: 60px;
+}
+.personal {
+  float: right;
+  margin-right: 120px;
+  cursor: pointer;
 }
 .el-footer {
   background-color: #e2e2e2;
@@ -201,5 +256,19 @@ a {
 /* 解决表格对不齐的问题，但是未解决 */
 .el-table th.gutter {
   display: table-cell !important;
+}
+.exit {
+  padding: 5px 0 5px 0;
+}
+.exit:hover {
+  background-color: #f2f2f2;
+  cursor: pointer;
+}
+.personal-center {
+  padding: 5px 0 5px 0;
+}
+.personal-center:hover {
+  background-color: #f2f2f2;
+  cursor: pointer;
 }
 </style>

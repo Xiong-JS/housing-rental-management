@@ -10,7 +10,7 @@ export default function request(config) {
   })
   instance.interceptors.request.use(config => {
 
-    let uToken = localStorage.getItem("uToken");
+    let uToken = sessionStorage.getItem("uToken");
     console.log(uToken);
     if (uToken) {
       console.log(uToken + '----');

@@ -77,7 +77,7 @@
 			form.on('submit(login)', function (data) {
 				//前端拦截器
 				axios.interceptors.request.use(config => {
-					let uToken = localStorage.getItem("uToken");
+					let uToken = sessionStorage.getItem("uToken");
 					if (uToken) {
 						//1.2 注意：给请求头里面添加u-token（后台判断就是取的这个请求头）请求头，并把随机数的token值也设置进去
 						config.headers['u-token'] = uToken;

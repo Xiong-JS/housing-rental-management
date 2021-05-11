@@ -12,6 +12,8 @@ const Country = ()=>import('./views/baseInfo/country/Country.vue')
 const Netherlands = ()=>import('./views/baseInfo/netherlands/Netherlands.vue')
 const DetailNetherlands = ()=>import('./views/baseInfo/dedtailNetherlands/DetailNetherlands.vue')
 const Audit = () =>import('./views/house/Audit.vue')
+const Comment = ()=>import('./views/baseInfo/comment/Comment.vue')
+const Graph = ()=>import('./views/graph/Graph.vue')
 
 
 export default new Router({
@@ -56,6 +58,12 @@ export default new Router({
     {
       path:'/audit',
       component:Audit
+    },{
+      path:'/comment',
+      component:Comment
+    },{
+      path:'/graph',
+      component:Graph
     }
   ]
 })

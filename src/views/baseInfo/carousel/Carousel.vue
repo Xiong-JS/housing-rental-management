@@ -127,7 +127,7 @@ export default {
       pageSize: 5,
       total: 0,
       uploadUrl: "http://localhost:8080/imgUpload",
-      headers: { "u-token": localStorage.getItem("uToken") },
+      headers: { "u-token": sessionStorage.getItem("uToken") },
       editFormVisible: false,
       addFormVisible: false,
       formLabelWidth: "120px",
