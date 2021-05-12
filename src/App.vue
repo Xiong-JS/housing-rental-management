@@ -122,14 +122,6 @@
     </div>
     <el-popover ref="popover" placement="bottom" width="100" trigger="hover">
       <div>
-        <!-- <div
-              class="personal-center"
-              @click="personalCenter(manager.id)"
-            >
-              <i class="iconfont icon-people" style="margin-left: 10px"></i
-              ><span style="margin-left: 10px">个人中心</span>
-            </div>
-            <div style="height:1px;background-color: #e6e6e6;"></div> -->
         <div class="exit" @click="exit">
           <i class="iconfont icon-exit" style="margin-left: 10px"></i
           ><span style="margin-left: 10px">退出</span>
