@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div v-if="getToken">
+    <div v-if="uToken != null">
       <el-container style="width: 100%; height: 100%; position: fixed">
         <el-header>
           <div class="personal" v-popover:popover>
@@ -137,12 +137,8 @@ export default {
   data() {
     return {
       manager: {},
+      uToken:localStorage.getItem('uToken')
     };
-  },
-  computed: {
-    getToken: function () {
-      return sessionStorage.getItem("uToken") != "undefined";
-    },
   },
   methods: {
     handleOpen(key, keyPath) {
@@ -159,7 +155,24 @@ export default {
       }, 1000);
     },
     personalCenter(id) {},
-    exit() {},
+    exit() {
+      request({
+        url: "/exit",
+        params: {
+          tokenKey: localStorage.getItem("uToken").split(":")[0],
+        },
+      }).then((res) => {
+        if (res.data.code == 200) {
+          localStorage.removeItem("uToken")
+          localStorage.removeItem("id")
+          this.$message.success("退出成功!");
+          setTimeout(() => {
+            window.location.href =
+              "http://127.0.0.1:8083/housing-rental-management/login.html";
+          }, 1000);
+        }
+      });
+    },
   },
   beforeCreate() {
     var url = location.search; //获取url中"?"符后的字串
@@ -175,14 +188,14 @@ export default {
     }
     let uToken = theRequest.uToken;
     let id = theRequest.id;
-    sessionStorage.setItem("uToken", uToken);
-    sessionStorage.setItem("id", id);
+    localStorage.setItem("uToken", uToken);
+    localStorage.setItem("id", id);
   },
   created() {
     request({
       url: "/manager/managerById",
       params: {
-        id: sessionStorage.getItem("id"),
+        id: localStorage.getItem("id"),
       },
     }).then((res) => {
       this.manager = res.data.data;

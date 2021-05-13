@@ -77,7 +77,7 @@
 			form.on('submit(login)', function (data) {
 				//前端拦截器
 				axios.interceptors.request.use(config => {
-					let uToken = sessionStorage.getItem("uToken");
+					let uToken = localStorage.getItem("uToken");
 					if (uToken) {
 						//1.2 注意：给请求头里面添加u-token（后台判断就是取的这个请求头）请求头，并把随机数的token值也设置进去
 						config.headers['u-token'] = uToken;
@@ -97,7 +97,7 @@
 					if (res.data.result.code == "000002") {
 						layer.msg(res.data.result.msg)
 						setTimeout(() => {
-							window.location.href = 'http://localhost:8081?uToken=' + res.data.uToken + '&id='+res.data.result.data[0].id;
+							window.location.href = 'http://localhost:8082?uToken=' + res.data.uToken + '&id='+res.data.result.data[0].id;
 						}, 1000);
 					}else{
 						layer.msg(res.data.result.msg)
