@@ -89,7 +89,9 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="addFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addNetherlandsConfirm">确 定</el-button>
+        <el-button type="primary" @click="addNetherlandsConfirm"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
   </div>
@@ -142,7 +144,7 @@ export default {
     },
     addBtnNetherlands(formName) {
       this.addFormVisible = true;
-      this.countries = []
+      this.countries = [];
       this.addNetherlands.netherlandsName = "";
     },
     handleSelectionChange() {},
@@ -185,8 +187,26 @@ export default {
         this.countries = res.data.data;
       });
     },
+    getManager() {
+      request({
+        url: "/manager/managerById",
+        params: {
+          id: localStorage.getItem("id"),
+        },
+      }).then((res) => {
+        if (res.data.msg == "NoUser" || res.data.code == "000004") {
+          this.$message.error("未登录,请登录!");
+          setTimeout(() => {
+            window.location.href =
+              "http://127.0.0.1:8083/housing-rental-management/login.html";
+          }, 1000);
+          return;
+        }
+      });
+    },
   },
   created() {
+    this.getManager();
     this.handleCurrentChange(1);
   },
 };

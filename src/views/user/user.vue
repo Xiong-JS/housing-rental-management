@@ -383,21 +383,16 @@ export default {
       }
     },
     handleAvatarSuccess(res, file) {
-      this.addUser.userImg = res.data
-      this.formData.userImg = res.data
+      this.addUser.userImg = res.data;
+      this.formData.userImg = res.data;
       this.$message.success("上传成功");
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 1;
-
       if (!isJPG) {
         this.$message.error("上传头像图片只能是 JPG 格式!");
       }
-      if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
-      }
-      return isJPG && isLt2M;
+      return isJPG;
     },
     addBtnUser() {
       this.addUser.id = "";
@@ -433,9 +428,27 @@ export default {
         console.log(res);
       });
     },
+    getManager() {
+      request({
+        url: "/manager/managerById",
+        params: {
+          id: localStorage.getItem("id"),
+        },
+      }).then((res) => {
+        if (res.data.msg == "NoUser" || res.data.code == "000004") {
+          this.$message.error("未登录,请登录!");
+          setTimeout(() => {
+            window.location.href =
+              "http://127.0.0.1:8083/housing-rental-management/login.html";
+          }, 1000);
+          return;
+        }
+      });
+    },
   },
   //data初始化后el还没绑定时
   created() {
+    this.getManager();
     request({
       url: "/user/userList",
       params: {

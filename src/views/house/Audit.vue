@@ -64,7 +64,7 @@
                 <span>{{ props.row.releaseTime }}</span>
               </el-form-item>
 
-              <el-form-item label="用户头像">
+              <el-form-item label="房屋图片">
                 <img :src="props.row.img" style="width: 100px; height: 100px" />
               </el-form-item>
               <el-form-item label="住房描述">
@@ -72,10 +72,10 @@
               </el-form-item>
               <el-form-item label="特色">
                 <span>
-                  <p v-if="props.row.monthPay == 1">月付，</p>
-                  <p v-if="props.row.balcony == 1">阳台，</p>
-                  <p v-if="props.row.hardback == 1">精装修，</p>
-                  <p v-if="props.row.homeAppliances == 1">家电齐全</p>
+                  <span style="margin-left:5px" v-if="props.row.monthPay == 1">月付</span>
+                  <span style="margin-left:5px" v-if="props.row.balcony == 1">阳台</span>
+                  <span style="margin-left:5px" v-if="props.row.hardback == 1">精装修</span>
+                  <span style="margin-left:5px" v-if="props.row.homeAppliances == 1">家电齐全</span>
                 </span>
               </el-form-item>
             </el-form>
@@ -290,8 +290,26 @@ export default {
         }
       });
     },
+    getManager(){
+    request({
+      url: "/manager/managerById",
+      params: {
+        id: localStorage.getItem("id"),
+      },
+    }).then((res) => {
+      if (res.data.msg == "NoUser" || res.data.code == "000004") {
+        this.$message.error("未登录,请登录!");
+        setTimeout(() => {
+        window.location.href =
+          "http://127.0.0.1:8083/housing-rental-management/login.html";
+      }, 1000);
+        return
+      }
+    });
+  },
   },
   created() {
+    this.getManager()
     this.getUnAuditHouse(1);
   },
 };

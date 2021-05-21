@@ -3,8 +3,9 @@
     <div v-if="uToken != null">
       <el-container style="width: 100%; height: 100%; position: fixed">
         <el-header>
+          <span style="font-size:28px">小熊租赁</span>
           <div class="personal" v-popover:popover>
-            <span>{{ manager.managerName }}</span>
+            <span>{{ name }}</span>
           </div>
         </el-header>
         <el-container>
@@ -120,7 +121,7 @@
     <div v-else>
       {{ loginFailed() }}
     </div>
-    <el-popover ref="popover" placement="bottom" width="100" trigger="hover">
+    <el-popover ref="popover" placement="bottom" width="100" trigger="hover" @show="getManager">
       <div>
         <div class="exit" @click="exit">
           <i class="iconfont icon-exit" style="margin-left: 10px"></i
@@ -137,7 +138,8 @@ export default {
   data() {
     return {
       manager: {},
-      uToken:localStorage.getItem('uToken')
+      uToken: localStorage.getItem("uToken"),
+      name:localStorage.getItem('name')
     };
   },
   methods: {
@@ -154,6 +156,24 @@ export default {
           "http://127.0.0.1:8083/housing-rental-management/login.html";
       }, 1000);
     },
+    getManager() {
+      request({
+        url: "/manager/managerById",
+        params: {
+          id: localStorage.getItem("id"),
+        },
+      }).then((res) => {
+        if (res.data.msg == "NoUser" || res.data.code == "000004") {
+          this.$message.error("未登录,请登录!");
+          setTimeout(() => {
+            window.location.href =
+              "http://127.0.0.1:8083/housing-rental-management/login.html";
+          }, 1000);
+          return;
+        }
+        this.manager = res.data.data;
+      });
+    },
     personalCenter(id) {},
     exit() {
       request({
@@ -163,8 +183,8 @@ export default {
         },
       }).then((res) => {
         if (res.data.code == 200) {
-          localStorage.removeItem("uToken")
-          localStorage.removeItem("id")
+          localStorage.removeItem("uToken");
+          localStorage.removeItem("id");
           this.$message.success("退出成功!");
           setTimeout(() => {
             window.location.href =
@@ -188,18 +208,16 @@ export default {
     }
     let uToken = theRequest.uToken;
     let id = theRequest.id;
-    localStorage.setItem("uToken", uToken);
-    localStorage.setItem("id", id);
+    let type = theRequest.type;
+    let name = theRequest.name
+    if (type == "manager") {
+      localStorage.setItem("uToken", uToken);
+      localStorage.setItem("id", id);
+      localStorage.setItem('name',name)
+    }
   },
   created() {
-    request({
-      url: "/manager/managerById",
-      params: {
-        id: localStorage.getItem("id"),
-      },
-    }).then((res) => {
-      this.manager = res.data.data;
-    });
+    this.getManager()
   },
 };
 </script>

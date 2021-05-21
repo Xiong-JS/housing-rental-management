@@ -147,8 +147,26 @@ export default {
         this.handleCurrentChange(1);
       });
     },
+    getManager() {
+      request({
+        url: "/manager/managerById",
+        params: {
+          id: localStorage.getItem("id"),
+        },
+      }).then((res) => {
+        if (res.data.msg == "NoUser" || res.data.code == "000004") {
+          this.$message.error("未登录,请登录!");
+          setTimeout(() => {
+            window.location.href =
+              "http://127.0.0.1:8083/housing-rental-management/login.html";
+          }, 1000);
+          return;
+        }
+      });
+    },
   },
   created() {
+    this.getManager();
     this.handleCurrentChange(1);
   },
 };

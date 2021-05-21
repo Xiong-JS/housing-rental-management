@@ -55,7 +55,6 @@
 										</div>
 									</div>
 								</form>
-								<small>没有账号?</small><a href="register.html" class="signup">&nbsp;注册</a>
 							</div>
 						</div>
 					</div>
@@ -97,7 +96,7 @@
 					if (res.data.result.code == "000002") {
 						layer.msg(res.data.result.msg)
 						setTimeout(() => {
-							window.location.href = 'http://localhost:8082?uToken=' + res.data.uToken + '&id='+res.data.result.data[0].id;
+							window.location.href = 'http://localhost:8082?uToken=' + res.data.uToken + '&id='+res.data.result.data[0].id+'&type=manager&name='+res.data.result.data[0].managerName;
 						}, 1000);
 					}else{
 						layer.msg(res.data.result.msg)

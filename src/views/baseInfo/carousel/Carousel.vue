@@ -208,7 +208,9 @@ export default {
       })
         .then((res) => {
           // console.log(res.data);
+          console.log(res.data.code);
           if (res.data.code == "200") {
+            console.log(res.data.data);
             this.carousel = res.data.data;
             this.currentPage = res.data.currentPage;
             this.total = res.data.total;
@@ -223,15 +225,11 @@ export default {
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 1;
 
       if (!isJPG) {
         this.$message.error("上传头像图片只能是 JPG 格式!");
       }
-      if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
-      }
-      return isJPG && isLt2M;
+      return isJPG;
     },
     addCarouselConfirm() {
       request({
@@ -247,8 +245,27 @@ export default {
         this.handleCurrentChange(1);
       });
     },
+    getManager() {
+      request({
+        url: "/manager/managerById",
+        params: {
+          id: localStorage.getItem("id"),
+        },
+      }).then((res) => {
+        if (res.data.msg == "NoUser" || res.data.code == "000004") {
+          this.$message.error("未登录,请登录!");
+          setTimeout(() => {
+            window.location.href =
+              "http://127.0.0.1:8083/housing-rental-management/login.html";
+          }, 1000);
+          return;
+        }
+      });
+    },
   },
+
   created() {
+    this.getManager();
     request({
       url: "/carousel",
       params: {
@@ -267,4 +284,27 @@ export default {
 </script>
 
 <style>
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
 </style>

@@ -135,8 +135,8 @@ export default {
       deputyTotal: 0,
       mainId: 0,
       deputyContent: "",
-      deleteMain:0,
-      deleteDeputy:0
+      deleteMain: 0,
+      deleteDeputy: 0,
     };
   },
   methods: {
@@ -187,7 +187,7 @@ export default {
       });
     },
     deleteCommentMain(id) {
-       this.$confirm("此操作将永久删除该评论, 是否继续?", "提示", {
+      this.$confirm("此操作将永久删除该评论, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -213,7 +213,7 @@ export default {
         });
     },
     deleteDeputyComment(id) {
-       this.$confirm("此操作将永久删除该评论, 是否继续?", "提示", {
+      this.$confirm("此操作将永久删除该评论, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -238,8 +238,26 @@ export default {
           });
         });
     },
+    getManager() {
+      request({
+        url: "/manager/managerById",
+        params: {
+          id: localStorage.getItem("id"),
+        },
+      }).then((res) => {
+        if (res.data.msg == "NoUser" || res.data.code == "000004") {
+          this.$message.error("未登录,请登录!");
+          setTimeout(() => {
+            window.location.href =
+              "http://127.0.0.1:8083/housing-rental-management/login.html";
+          }, 1000);
+          return;
+        }
+      });
+    },
   },
   created() {
+    this.getManager();
     this.getComments(1);
   },
 };

@@ -315,7 +315,7 @@ export default {
           });
         });
     },
-    handleCommunityDelete(row){
+    handleCommunityDelete(row) {
       this.$confirm("此操作将永久删除该城市, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -466,8 +466,26 @@ export default {
     addBtnCommunity() {
       this.addCommunityFormVisible = true;
     },
+    getManager() {
+      request({
+        url: "/manager/managerById",
+        params: {
+          id: localStorage.getItem("id"),
+        },
+      }).then((res) => {
+        if (res.data.msg == "NoUser" || res.data.code == "000004") {
+          this.$message.error("未登录,请登录!");
+          setTimeout(() => {
+            window.location.href =
+              "http://127.0.0.1:8083/housing-rental-management/login.html";
+          }, 1000);
+          return;
+        }
+      });
+    },
   },
   created() {
+    this.getManager();
     this.handleCurrentChange(1);
   },
 };
