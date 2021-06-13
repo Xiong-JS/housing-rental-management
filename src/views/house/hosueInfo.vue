@@ -39,7 +39,7 @@
         type="danger"
         size="small"
         class="el-icon-delete"
-        style="margin-left: 150px"
+        style="margin-left: 250px"
         >删除</el-button
       >
     </div>
@@ -260,7 +260,7 @@ export default {
       this.multipleSelection = val;
     },
     deleteBtnHouseInfos() {
-      if (this.houseIds.length == 0) {
+      if (this.multipleSelection.length == 0) {
         this.$message.warning("选择你要删除的数据!");
         return;
       }

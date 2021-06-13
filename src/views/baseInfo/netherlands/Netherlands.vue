@@ -144,7 +144,7 @@ export default {
     },
     addBtnNetherlands(formName) {
       this.addFormVisible = true;
-      this.countries = [];
+      this.addNetherlands.countryId = '';
       this.addNetherlands.netherlandsName = "";
     },
     handleSelectionChange() {},

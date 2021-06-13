@@ -263,9 +263,7 @@ export default {
       countries: [],
       netherlands: [],
       communities: [],
-      otherNetherlands: [],
       detailNetherlands: [],
-      otherDetailNetherlands: [],
       currentPage: 1,
       communityCurrentPage: 1,
       communityTotal: 0,
@@ -371,8 +369,9 @@ export default {
     },
     addBtnDetailNetherlands() {
       this.addFormVisible = true;
-      this.countries = [];
-      this.addDetailNetherlands.netherlandsName = "";
+      this.addDetailNetherlands.countryId = '';
+      this.addDetailNetherlands.netherlandsId = '';
+      this.addDetailNetherlands.detailNetherlandsName = "";
     },
     handleSelectionChange() {},
     handleSizeChange(val) {},
@@ -442,28 +441,8 @@ export default {
         this.netherlands = res.data.data;
       });
     },
-    countryOtherChange(val) {
-      request({
-        url: "/house/netherlands",
-        params: {
-          countryId: this.addCommunity.countryId,
-        },
-      }).then((res) => {
-        this.otherNetherlands = res.data.data;
-      });
-    },
-    netherlandsChange(val) {
-      request({
-        url: "/house/detailNetherlands",
-        params: {
-          countryId: this.addCommunity.countryId,
-          detailNetherlandsId: this.addCommunity.detailNetherlandsId,
-        },
-      }).then((res) => {
-        this.otherDetailNetherlands = res.data.data;
-      });
-    },
     addBtnCommunity() {
+      this.addCommunity.communityName = ''
       this.addCommunityFormVisible = true;
     },
     getManager() {

@@ -73,6 +73,10 @@ export default {
                 value: this.houseRate.nums1[1],
                 name: this.houseRate.rentalTypes[1],
               },
+               {
+                value: this.houseRate.nums1[2],
+                name: this.houseRate.rentalTypes[2],
+              },
             ],
             emphasis: {
               itemStyle: {

@@ -53,6 +53,9 @@
               <el-form-item label="用户账号">
                 <span>{{ props.row.userAccount }}</span>
               </el-form-item>
+              <el-form-item label="用户电话">
+                <span>{{ props.row.userPhone }}</span>
+              </el-form-item>
               <el-form-item label="用户密码">
                 <span>{{ props.row.userPassword }}</span>
               </el-form-item>
@@ -129,6 +132,9 @@
             auto-complete="off"
           ></el-input>
         </el-form-item>
+        <el-form-item label="用户电话" :label-width="formLabelWidth">
+          <el-input v-model="formData.userPhone" auto-complete="off"></el-input>
+        </el-form-item>
         <el-form-item label="用户头像" :label-width="formLabelWidth">
           <el-upload
             class="avatar-uploader"
@@ -147,7 +153,6 @@
             />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
-          <!-- <el-input v-model="addUser.userImg" auto-complete="off"></el-input> -->
         </el-form-item>
         <el-form-item label="用户注册时间" :label-width="formLabelWidth">
           <el-input
@@ -187,7 +192,7 @@
             auto-complete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item label="用户头像" :label-width="formLabelWidth">
+        <!-- <el-form-item label="用户头像" :label-width="formLabelWidth">
           <el-upload
             class="avatar-uploader"
             :action="uploadUrl"
@@ -205,8 +210,7 @@
             />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
-          <!-- <el-input v-model="addUser.userImg" auto-complete="off"></el-input> -->
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="零钱" :label-width="formLabelWidth">
           <el-input v-model="addUser.userWallet" auto-complete="off"></el-input>
         </el-form-item>
@@ -246,6 +250,7 @@ export default {
         userImg: "",
         userRegisterTime: "",
         userWallet: "",
+        userPhone: "",
       },
       addUser: {
         id: "",
@@ -293,6 +298,7 @@ export default {
       this.formData.userImg = row.userImg;
       this.formData.userRegisterTime = row.userRegisterTime;
       this.formData.userWallet = row.userWallet;
+      this.formData.userPhone = row.userPhone;
       this.editFormVisible = true;
       this.imgData = {
         path: "bishe/user",
@@ -332,6 +338,12 @@ export default {
       this.multipleSelection = val;
     },
     editUserConfirm() {
+      if (this.formData.userPhone != null) {
+        if (this.formData.userPhone.length != 11) {
+          this.$message.error("电话输入错误!");
+          return;
+        }
+      }
       request({
         url: "/user/userEdit",
         method: "post",
@@ -341,11 +353,12 @@ export default {
           userPassword: this.formData.userPassword,
           userImg: this.formData.userImg,
           userWallet: this.formData.userWallet,
+          userPhone: this.formData.userPhone,
         },
       })
         .then((res) => {
-          console.log("userEdit", res);
           this.handleCurrentChange(1);
+          this.$message.success("修改成功!");
         })
         .catch((err) => {});
       this.editFormVisible = false;

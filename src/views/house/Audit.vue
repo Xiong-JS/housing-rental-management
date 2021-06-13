@@ -236,7 +236,9 @@ export default {
     handleSizeChange(val) {
       this.getUnAuditHouse(val);
     },
-    handleCurrentChange(val) {},
+    handleCurrentChange(val) {
+      this.getUnAuditHouse(val)
+    },
     searchBtn() {
       this.getUnAuditHouse(1);
     },
@@ -268,6 +270,11 @@ export default {
       this.position.dimensionality = "";
     },
     submit(formName) {
+      console.log('-'+this.position.longitude+'-');
+      if(this.position.longitude == '' || this.position.dimensionality == ''){
+        this.$message.error('输入不完整!')
+        return
+      }
       this.$refs[formName].validate((valid) => {
         if (valid) {
           request({
